@@ -1,0 +1,150 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+data:
+  pipelines.yml: |
+    - pipeline.id: logs
+      path.config: "/usr/share/logstash/pipeline/logstash-azure-logs.conf"
+    - pipeline.id: metrics
+      path.config: "/usr/share/logstash/pipeline/logstash-azure-metrics.conf"
+  logstash-azure-logs.conf: |-
+    input {
+      beats {
+        port => 5044
+        type => "filebeat-logs"
+      }
+    }
+
+    filter {
+      json {
+        source => "message"
+        target => "data"
+      }
+      
+      if [azure][storage][container][name] == "insights-logs-appservicehttplogs" {
+        ruby {
+          code => '
+            begin
+              puts "data"
+              properties_hash = event.get("data")["properties"]
+              dataparsed=JSON.parse(properties_hash)
+              check=dataparsed["CsHost"].include?("scm")
+              if !check 
+                cip=dataparsed["CIp"].include?("127.0.0.1")
+                if !cip 
+                  puts "not a local client"
+                  appservice=dataparsed["CsHost"].split(".").first
+                  event.set("data.httplogs.appservice", appservice)
+                  JSON.parse(properties_hash).each { |key, value|
+                    event.set("data.httplogs.#{key}", value)
+                  }
+                else
+                  event.cancel
+                end
+              else
+                event.cancel
+              end
+            rescue => e
+              puts "Ruby exception logs app service: #{e.message}"
+            end
+          '
+        }
+      }
+    }
+
+    output {
+      if [type] == "filebeat-logs" {
+        elasticsearch {
+          hosts => ["https://es01:9200"]
+          user => "elastic"
+          password => "Aloulou556"
+          document_id => "%{[@metadata][_id]}"
+          index => "appservice-httplogs-%{+YYYY.MM.dd}"
+          ssl => true
+          cacert => "/usr/share/logstash/certs/ca/ca.crt"
+        }
+      }
+    }
+  logstash-azure-metrics.conf: |-
+    input {
+      beats {
+        port => 5045
+      }
+    }
+
+    filter {
+        json {
+          source => "message"
+          target => "data"
+        }
+          ruby { code => '
+                  begin
+                    resource_type=event.get("data")["resourceId"].match(/PROVIDERS\/([^\/]+)/)[1]
+                    event.set("data.resourceType", resource_type)
+
+                    # Metric of storage account
+                    if resource_type == "MICROSOFT.STORAGE"
+                      if event.get("data")["metricName"]=="UsedCapacity" || ( (event.get("data")["metricName"]=="BlobCapacity" || event.get("data")["metricName"]=="FileCapacity") && event.get("data")["total"] !=0 )
+                        capacity_bytes=event.get("data")["total"]
+                        capacity_Gib = capacity_bytes.to_f / (1024 ** 3)
+                        storageaccount=event.get("data")["resourceId"].match(/STORAGEACCOUNTS\/([^\/]+)/)[1]
+                        event.set("data.storageaccount", storageaccounteee)
+                        event.set("data.capacity", capacity_Gib)
+                        if event.get("data")["metricName"]=="BlobCapacity"
+                          event.set("data.capacityTarget", "blob")
+                        elsif event.get("data")["metricName"]=="FileCapacity"
+                          event.set("data.capacityTarget", "file")
+                        end
+                      elsif (event.get("data")["metricName"]=="Transactions")
+                        storageaccount=event.get("data")["resourceId"].match(/STORAGEACCOUNTS\/([^\/]+)/)[1]
+                        event.set("data.storageaccount", storageaccount)
+                      else
+                        event.cancel
+                      end
+                      
+                    # Metric of app service
+                    elsif resource_type == "MICROSOFT.WEB"
+                      puts "------------------- new record-----------------"
+                      appservice_plan=event.get("data")["resourceId"].match(/SERVERFARMS\/([^\/]+)/)[1]
+                      puts "appservice plan : #{appservice_plan}"
+                      metric=event.get("data")["metricName"]
+                      puts "metric name : #{metric}"
+                      if metric!="CpuPercentage" && metric!="MemoryPercentage"
+                        event.cancel
+                      end
+                      event.set("data.appservicePlan", appservice_plan)
+                    end
+                  rescue => e
+                    puts "Ruby exception app service metric : #{e.message}"
+                  end
+                '
+          }
+    }
+    output {
+      if [data.resourceType] == "MICROSOFT.WEB" {
+        elasticsearch {
+          hosts => ["https://es01:9200"]
+          user => "elastic"
+          password => "Aloulou556"
+          document_id => "%{[@metadata][_id]}"
+          index => "appservices-metrics-%{+YYYY.MM.dd}"
+          ssl => true
+          cacert => "/usr/share/logstash/certs/ca/ca.crt"
+        }
+
+      }
+      if [data.resourceType] == "MICROSOFT.STORAGE" {
+        elasticsearch {
+          hosts => ["https://es01:9200"]
+          user => "elastic"
+          password => "Aloulou556"
+          document_id => "%{[@metadata][_id]}"
+          index => "storageaccounts-metrics-%{+YYYY.MM.dd}"
+          ssl => true
+          cacert => "/usr/share/logstash/certs/ca/ca.crt"
+        }
+      }
+
+    }
+

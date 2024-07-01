@@ -1,0 +1,83 @@
+# kibana.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:8.14.1
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 5601
+          env:
+            - name: SERVERNAME
+              value: "kibana"
+
+            - name: ELASTICSEARCH_HOSTS
+              value: "https://es01:9200"
+
+            - name: ELASTICSEARCH_USERNAME
+              value: "kibana_system"
+
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: KIBANA_PASSWORD
+
+            - name: ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES
+              value: "/usr/share/kibana/config/certs/ca/ca.crt"
+
+            - name: ELASTICSEARCH.SSL.CERTIFICATE
+              value: "/usr/share/kibana/config/certs/kibana/kibana.crt"
+
+            - name: ELASTICSEARCH.SSL.KEY
+              value: "/usr/share/kibana/config/certs/kibana/kibana.key"
+
+          volumeMounts:
+            - mountPath: /usr/share/kibana/config/certs
+              name: certs
+
+            - mountPath: /usr/share/kibana/data
+              name: kibanadata
+
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 1.5Gi
+              cpu: 500m
+      volumes:
+        - name: certs
+          persistentVolumeClaim:
+            claimName: certs-pvc
+            
+        - name: kibanadata
+          persistentVolumeClaim:
+            claimName: kibanadata-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  type: NodePort
+  ports:
+    - port: 5601         # Port on the service
+      targetPort: 5601   # Port on the pod
+      nodePort: 30001    # Port on the node (choose within the range 30000-32767)
+  selector:
+    app: kibana   # Selects pods with the label 

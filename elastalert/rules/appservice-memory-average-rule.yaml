@@ -1,0 +1,12 @@
+name: "Average Memory utilization Rule"
+type: "custom_modules.appservice_memory_average.AppserviceMemoryAverageRule"
+index: "appservices-metrics-*"
+
+http_post2_url:
+  - "http://192.168.1.3:3000/appservices?path=/create/alert/memory/average"
+http_post2_payload:
+  appservice_plan: "{{appservice_plan}}"
+  average_memory: "{{average_memory}}"
+  date: "{{date}}"
+alert:
+- "debug"

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat-metrics
+  labels:
+    app: filebeat-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebeat-metrics
+  template:
+    metadata:
+      labels:
+        app: filebeat-metrics
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.14.1
+        args: [
+          "-c", "/usr/share/filebeat/filebeat.yml",
+          "-e"
+        ]
+        resources:
+          limits:
+            memory: 200Mi
+            cpu: 200m
+
+          requests:
+            memory: 100Mi
+            cpu: 100m
+
+        volumeMounts:
+        - name: filebeatmetricsdata
+          mountPath: /usr/share/filebeat/data
+
+        - name: config
+          mountPath: /usr/share/filebeat/filebeat.yml
+          subPath: filebeat.yml
+
+      volumes:
+      - name: config
+        configMap:
+          name: filebeat-metrics-config
+      
+      - name: filebeatmetricsdata
+        persistentVolumeClaim:
+          claimName: filebeat-metrics-pvc
+

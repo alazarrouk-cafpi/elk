@@ -1,0 +1,98 @@
+# logstash.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastalert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elastalert
+  template:
+    metadata:
+      labels:
+        app: elastalert
+    spec:
+      initContainers:
+        - name: uploading-rules
+          image: busybox
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /opt/elastalert/custom_modules
+              mkdir -p /opt/elastalert/config
+              mkdir -p /opt/elastalert/certs
+              ls /opt/elastalert
+
+      containers:
+        - name: elastalert
+          image: jertel/elastalert2:latest
+          ports:
+            - containerPort: 3030
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 300m
+            limits:
+              memory: 400Mi
+              cpu: 400m
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              elastalert-create-index --config /opt/elastalert/config/config.yaml
+              elastalert --config /opt/elastalert/config/config.yaml --verbose
+          volumeMounts:
+            - mountPath: /opt/elastalert/certs
+              name: certs
+
+            - mountPath: /opt/elastalert/config
+              name: elastalert2config
+
+            - mountPath: /opt/elastalert/rules
+              name: elastalert2rules
+
+            - mountPath: /opt/elastalert/custom_modules
+              name: elastalert2modules
+
+      volumes:
+        - name: certs
+          persistentVolumeClaim:
+            claimName: certs-pvc
+
+        - name: elastalert2data
+          persistentVolumeClaim:
+            claimName: elastalert2-pvc
+
+        - name: elastalert2config
+          persistentVolumeClaim:
+            claimName: elastalert2-config-pvc
+
+        - name: elastalert2rules
+          persistentVolumeClaim:
+            claimName: elastalert2-rules-pvc
+
+        - name: elastalert2modules
+          persistentVolumeClaim:
+            claimName: elastalert2-modules-pvc
+
+        - name: config-folder
+          emptyDir: {}
+
+        - name: rules-folder
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastalert2
+spec:
+  ports:
+    - port: 3030
+      targetPort: 3030
+  selector:
+    app: elastalert2

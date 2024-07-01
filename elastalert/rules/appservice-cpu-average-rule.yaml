@@ -1,0 +1,11 @@
+name: "Average Cpu utilization Rule"
+type: "custom_modules.appservice-cpu-average-module.AppserviceCpuAverageRule"
+index: "appservices-metrics-*"
+http_post2_url:
+  - "http://192.168.1.3:3000/appservices?path=/create/alert/cpu/average"
+http_post2_payload:
+  appservice_plan: "{{appservice_plan}}"
+  average_cpu: "{{average_cpu}}"
+  date: "{{date}}"
+alert:
+- "debug"

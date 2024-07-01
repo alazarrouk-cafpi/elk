@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+
+      initContainers:
+        - name: creating-logstash-pipeline-files
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              rm -rf /usr/share/logstash/pipeline/logstash.conf
+              touch /usr/share/logstash/pipeline/logstash-azure-logs.conf
+              touch /usr/share/logstash/pipeline/logstash-azure-metrics.conf
+          volumeMounts:
+            - mountPath: /usr/share/logstash/pipeline
+              name: logstash-pipeline
+
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:8.14.1
+          ports:
+            - containerPort: 5044
+          env:
+            - name: NODE_NAME
+              value: "logstash"
+            - name: xpack.monitoring.enabled
+              value: "false"
+            - name: ELASTIC_USER
+              value: "elastic"
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: ELASTIC_PASSWORD
+            - name: ELASTIC_HOSTS
+              value: "https://es01:9200"
+
+          volumeMounts:
+            - mountPath: /usr/share/logstash/certs
+              name: certs
+
+            - mountPath: /usr/share/logstash/pipeline
+              name: logstash-pipeline
+
+            - mountPath: /usr/share/logstash/config/pipelines.yml
+              name: config
+              subPath: pipelines.yml
+
+
+            - mountPath: /usr/share/logstash/pipeline/logstash-azure-logs.conf
+              name: config
+              subPath: logstash-azure-logs.conf
+
+            - mountPath: /usr/share/logstash/pipeline/logstash-azure-metrics.conf
+              name: config
+              subPath: logstash-azure-metrics.conf
+
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+
+      volumes:
+        - name: certs
+          nfs:
+            server: 10.53.2.115
+            path: /mnt/data/certs
+
+        - name: logstashdata
+          persistentVolumeClaim:
+            claimName: logstashdata-pvc
+
+        - name: logstash-pipeline
+          emptyDir: {}
+
+        - name: config
+          configMap:
+            name: logstash-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+spec:
+  ports:
+  - name: port1
+    port: 5044
+    targetPort: 5044
+  - name: port2
+    port: 5045
+    targetPort: 5045
+  selector:
+    app: logstash

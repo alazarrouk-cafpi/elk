@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elk-config
+data:
+  ELASTIC_PASSWORD : "Aloulou556"
+  KIBANA_PASSWORD : "Aloulou556"
+  STACK_VERSION : "8.14.1"
+  CLUSTER_NAME : "elk"
+  LICENSE : "basic"
+  ES_PORT : "9200"
+  KIBANA_PORT : "5601"
+  ES_MEM_LIMIT : "4Gi"
+  KB_MEM_LIMIT : "1Gi"
+  LS_MEM_LIMIT : "2Gi"
+  ENCRYPTION_KEY: 

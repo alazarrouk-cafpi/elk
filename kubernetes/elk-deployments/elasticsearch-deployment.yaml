@@ -1,0 +1,129 @@
+# elasticsearch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      initContainers:
+        - name: init-sysctl
+          image: busybox
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              sysctl -w vm.max_map_count=262144
+        - name: init-permissions
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "Setting permissions..."
+              chmod -R 777 /usr/share/elasticsearch/data
+
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: esdata
+      containers:
+        - name: es01
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["IPC_LOCK"]
+          ports:
+            - containerPort: 9200
+          env:
+            - name: node.name
+              value: "es01"
+            - name: cluster.name
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: CLUSTER_NAME
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: ELASTIC_PASSWORD
+            - name: ES_MEM_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: ES_MEM_LIMIT
+            - name: discovery.type
+              value: single-node
+            - name: ES_JAVA_OPTS
+              value: "-Xms1g -Xmx1g"
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: xpack.security.enabled
+              value: "true"
+            - name: xpack.security.http.ssl.enabled
+              value: "true"
+            - name: xpack.security.http.ssl.key
+              value: "/usr/share/elasticsearch/config/certs/es01/es01.key"
+            - name: xpack.security.http.ssl.certificate
+              value: "/usr/share/elasticsearch/config/certs/es01/es01.crt"
+            - name: xpack.security.http.ssl.certificate_authorities
+              value: "/usr/share/elasticsearch/config/certs/ca/ca.crt"
+            - name: xpack.security.transport.ssl.enabled
+              value: "true"
+            - name: xpack.security.transport.ssl.key
+              value: "/usr/share/elasticsearch/config/certs/es01/es01.key"
+            - name: xpack.security.transport.ssl.certificate
+              value: "/usr/share/elasticsearch/config/certs/es01/es01.crt"
+            - name: xpack.security.transport.ssl.certificate_authorities
+              value: "/usr/share/elasticsearch/config/certs/ca/ca.crt"
+            - name: xpack.security.transport.ssl.verification_mode
+              value: "certificate"
+            - name: xpack.license.self_generated.type
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: LICENSE
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/config/certs
+              name: certs
+            - mountPath: /usr/share/elasticsearch/data
+              name: esdata
+
+          resources:
+            requests:
+              memory: 4Gi
+              cpu: 800m
+            limits:
+              memory: 6Gi
+              cpu: 1000m
+      volumes:
+        - name: certs
+          persistentVolumeClaim:
+            claimName: certs-pvc
+            
+        - name: esdata
+          persistentVolumeClaim:
+            claimName: esdata-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es01
+spec:
+  type: NodePort
+  ports:
+    - port: 9200         # Port on the service
+      targetPort: 9200   # Port on the pod
+      nodePort: 30000    # Port on the node (choose within the range 30000-32767)
+  selector:
+    app: elasticsearch   # Selects pods with the label app=elasticsearch

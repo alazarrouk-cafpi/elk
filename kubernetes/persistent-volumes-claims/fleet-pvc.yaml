@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fleetdata-pvc
+spec:
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany 
+  resources:
+    requests:
+      storage: 20Gi
+  volumeName: fleetdata-pv

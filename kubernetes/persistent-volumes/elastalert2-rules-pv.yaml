@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elastalert2-rules-pv
+spec:
+  storageClassName: nfs
+  capacity:
+    storage: 50Mi
+  accessModes:
+    - ReadWriteMany 
+  nfs:
+    path: /mnt/data/elastalert-config/rules
+    server: 10.53.2.115
