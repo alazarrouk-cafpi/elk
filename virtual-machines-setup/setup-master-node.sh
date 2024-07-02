@@ -8,12 +8,11 @@
 #microk8s status --wait-ready
 #microk8s enable dns
 #microk8s enable storage
-alias kubectl='microk8s kubectl' 
 
 
-#kubectl label node master-k8s node-role.kubernetes.io/master=master
-#kubectl label node node01-k8s node-role.kubernetes.io/worker=worker
-#kubectl label node node02-k8s node-role.kubernetes.io/worker=worker
+#microk8s kubectl label node master-k8s node-role.kubernetes.io/master=master
+#microk8s kubectl label node node01-k8s node-role.kubernetes.io/worker=worker
+#microk8s kubectl label node node02-k8s node-role.kubernetes.io/worker=worker
 
 mkdir -p /mnt/data/certs
 mkdir -p /mnt/data/elastalert-config/config
@@ -50,8 +49,8 @@ lines_to_add=(
 "/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
-"/mnt/data/filebeatlogsdata 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
-"/mnt/data/filebeatmetricsdata 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 )
 
 for line in "${lines_to_add[@]}"
@@ -72,42 +71,42 @@ cp -r elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
 cp -r elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
 
 #setup configMaps
-kubectl apply -f elk-main/kubernetes/configMaps/env-configMap.yaml
-kubectl apply -f elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
-kubectl apply -f elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
-kubectl apply -f elk-main/kubernetes/configMaps/logstash-configMap.yaml
+microk8s kubectl apply -f elk-main/kubernetes/configMaps/env-configMap.yaml
+microk8s kubectl apply -f elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
+microk8s kubectl apply -f elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
+microk8s kubectl apply -f elk-main/kubernetes/configMaps/logstash-configMap.yaml
 #setup pv's
-kubectl apply -f elk-main/kubernetes/persistent-volumes/certs-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-modules-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/kibana-pv.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes/logstash-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/certs-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-modules-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/kibana-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/logstash-pv.yaml
 #setup pvc's 
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/certs-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-config-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-modules-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
-kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/certs-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-config-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-modules-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
 #setup deployments
-kubectl apply -f elk-main/kubernetes/elk-deployments/certs-setup-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
-kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/certs-setup-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
 
 
 
@@ -115,7 +114,7 @@ kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
 
 
 #---container registery service principle secret 
-#kubectl create secret docker-registry elkimages-secret \
+#microk8s kubectl create secret docker-registry elkimages-secret \
 #    --namespace default\
 #    --docker-server=elkimages.azurecr.io \
 #    --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
