@@ -65,43 +65,50 @@ sudo systemctl restart nfs-kernel-server
 #----Creating kubernetes resources 
 curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
 unzip elk.zip 
+#coping elastalert folders 
+cp -r elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
+cp -r elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
+cp -r elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
+
 #setup configMaps
 kubectl apply -f elk-main/kubernetes/configMaps/env-configMap.yaml
 kubectl apply -f elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
 kubectl apply -f elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
 kubectl apply -f elk-main/kubernetes/configMaps/logstash-configMap.yaml
 #setup pv's
-kubectl apply -f elk-main/persistent-volumes/certs-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/elastalert2-config-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/elastalert2-modules-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/elastalert2-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/elastalert2-rules-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/elasticsearch-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/filebeat-logs-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/filebeat-metrics-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/fleet-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/kibana-pv.yaml
-kubectl apply -f elk-main/persistent-volumes/logstash-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/certs-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-modules-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/kibana-pv.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes/logstash-pv.yaml
 #setup pvc's 
-kubectl apply -f elk-main/persistent-volumes-claims/certs-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/elastalert2-config-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/elastalert2-modules-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/elastalert2-rules-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/elastalert2-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/elasticsearch-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/filebeat-logs-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/filebeat-metrics-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/fleet-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/kibana-pvc.yaml
-kubectl apply -f elk-main/persistent-volumes-claims/logstash-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/certs-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-config-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-modules-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
+kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
 #setup deployments
-kubectl apply -f elk-main/elk-deployments/certs-setup-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/elastalert2-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/elasticsearch-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/filebeat-logs-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/filebeat-metrics-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/kibana-deployment.yaml
-kubectl apply -f elk-main/elk-deployments/logstash-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/certs-setup-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
+kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
+
+
 
 
 
