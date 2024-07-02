@@ -1,3 +1,4 @@
+#!/bin/bash
 #sudo apt-get update 
 #sudo apt install curl net-tools wget unzip openjdk-17-jdk
 #sudo snap install microk8s --classic
@@ -7,7 +8,7 @@
 #microk8s status --wait-ready
 #microk8s enable dns
 #microk8s enable storage
-#alias kubectl='microk8s kubectl' 
+alias kubectl='microk8s kubectl' 
 
 
 #kubectl label node master-k8s node-role.kubernetes.io/master=master
