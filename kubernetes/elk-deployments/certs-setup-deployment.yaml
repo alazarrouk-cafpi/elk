@@ -69,6 +69,12 @@ spec:
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                "  - name: fleet\n"\
+                "    dns:\n"\
+                "      - fleet\n"\
+                "      - localhost\n"\
+                "    ip:\n"\
+                "      - 127.0.0.1\n"\
                 "  - name: elastalert2\n"\
                 "    dns:\n"\
                 "      - elastalert2\n"\
