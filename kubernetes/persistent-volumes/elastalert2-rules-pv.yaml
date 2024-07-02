@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: elastalert2-rules-pv
+  name: elastalert-rules-pv
 spec:
   storageClassName: nfs
   capacity:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: elastalert2-rules-pvc
+  name: elastalert-rules-pvc
 spec:
   storageClassName: nfs
   accessModes:
@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 50Mi
-  volumeName: elastalert2-rules-pv
+  volumeName: elastalert-rules-pv
