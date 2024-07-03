@@ -119,6 +119,8 @@ metadata:
   name: logstash
 spec:
   ports:
+  - name: port0
+    port: 9600
   - name: port1
     port: 5044
     targetPort: 5044

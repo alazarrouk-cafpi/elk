@@ -24,9 +24,12 @@ spec:
               wget https://github.com/moparisthebest/static-curl/releases/download/v7.85.0/curl-amd64
               mv curl-amd64 /bin/curl
               chmod +x /bin/curl
-              until curl -k --user elastic:${ELASTIC_PASSWORD} https://logstash:5045; do
-                echo "Waiting for Logstash..."
-                sleep 10
+              wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+              chmod +x jq
+              mv jq /bin/jq
+              while ! curl -s http://logstash:9600/_node/pipelines | jq -e '.pipelines.metrics.status == "green"' >/dev/null; do
+                  echo "Waiting for Logstash pipeline 'metrics' to be ready..."
+                  sleep 5
               done
           env:
             - name: ELASTIC_PASSWORD
