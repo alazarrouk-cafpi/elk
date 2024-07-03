@@ -13,6 +13,23 @@ spec:
       labels:
         app: kibana
     spec:
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until curl -k --user elastic:${ELASTIC_PASSWORD} https://es01:9200/_cluster/health?wait_for_status=yellow; do
+                echo "Waiting for Elasticsearch..."
+                sleep 10
+              done
+          env:
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: ELASTIC_PASSWORD
       containers:
         - name: kibana
           image: docker.elastic.co/kibana/kibana:8.14.1
