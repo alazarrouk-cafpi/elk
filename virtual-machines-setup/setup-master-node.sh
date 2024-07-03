@@ -14,6 +14,7 @@
 #microk8s kubectl label node node01-k8s node-role.kubernetes.io/worker=worker
 #microk8s kubectl label node node02-k8s node-role.kubernetes.io/worker=worker
 
+rm -rf /mnt/data/*
 mkdir -p /mnt/data/certs
 mkdir -p /mnt/data/elastalert-config/config
 mkdir -p /mnt/data/elastalert-config/custom_modules
