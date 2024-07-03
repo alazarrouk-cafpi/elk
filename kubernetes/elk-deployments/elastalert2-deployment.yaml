@@ -27,6 +27,9 @@ spec:
               mkdir -p /opt/elastalert/config
               mkdir -p /opt/elastalert/certs
               ls /opt/elastalert
+              wget https://github.com/moparisthebest/static-curl/releases/download/v7.85.0/curl-amd64
+              mv curl-amd64 /bin/curl
+              chmod +x /bin/curl
               until curl -k --user elastic:${ELASTIC_PASSWORD} https://logstash:5045; do
                 echo "Waiting for Logstash..."
                 sleep 10
