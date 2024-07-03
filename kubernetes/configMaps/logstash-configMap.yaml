@@ -11,7 +11,7 @@ data:
   logstash-azure-logs.conf: |-
     input {
       beats {
-        port => 5044
+        port => 5044,
         type => "filebeat-logs"
       }
     }
@@ -69,7 +69,8 @@ data:
   logstash-azure-metrics.conf: |-
     input {
       beats {
-        port => 5045
+        port => 5045,
+        type => "filebeat-metrics"
       }
     }
 
