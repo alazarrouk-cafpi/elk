@@ -76,19 +76,19 @@ spec:
 
         - name: elastalert2data
           persistentVolumeClaim:
-            claimName: elastalert2-pvc
+            claimName: elastalert-pvc
 
         - name: elastalert2config
           persistentVolumeClaim:
-            claimName: elastalert2-config-pvc
+            claimName: elastalert-config-pvc
 
         - name: elastalert2rules
           persistentVolumeClaim:
-            claimName: elastalert2-rules-pvc
+            claimName: elastalert-rules-pvc
 
         - name: elastalert2modules
           persistentVolumeClaim:
-            claimName: elastalert2-modules-pvc
+            claimName: elastalert-modules-pvc
 
         - name: config-folder
           emptyDir: {}
