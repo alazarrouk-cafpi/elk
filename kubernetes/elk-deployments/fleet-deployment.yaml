@@ -50,16 +50,17 @@ spec:
             - |
               SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' certs/fleet-token | cut -d '=' -f 2 | xargs)
               echo $SERVICE_TOKEN
-              yes | ./elastic-agent install \
-                --url=https://fleet:8220 \
-                --fleet-server-es=https://es01:9200 \
-                --fleet-server-service-token=$SERVICE_TOKEN \
-                --fleet-server-policy=fleet-server-policy \
-                --certificate-authorities=/elastic-agent-8.14.1-linux-x86_64/certs/ca/ca.crt \
-                --fleet-server-es-ca=/elastic-agent-8.14.1-linux-x86_64/certs/es01/es01.crt \
-                --fleet-server-cert=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.crt \
-                --fleet-server-cert-key=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.key \
-                --fleet-server-port=8220
+              curl --cacert certs/ca/ca.crt -H "Authorization: Bearer $SERVICE_TOKEN" https://es01:9200/_security/_authenticate
+              ./elastic-agent install \
+              --url=https://fleet:8220 \
+              --fleet-server-es=https://es01:9200 \
+              --fleet-server-service-token=$SERVICE_TOKEN \
+              --fleet-server-policy=fleet-server-policy \
+              --certificate-authorities=/elastic-agent-8.14.1-linux-x86_64/certs/ca/ca.crt \
+              --fleet-server-es-ca=/elastic-agent-8.14.1-linux-x86_64/certs/es01/es01.crt \
+              --fleet-server-cert=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.crt \
+              --fleet-server-cert-key=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.key \
+              --fleet-server-port=8220 | Y
 
           resources:
             requests:
