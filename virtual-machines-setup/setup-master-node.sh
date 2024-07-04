@@ -50,7 +50,6 @@ lines_to_add=(
 "/mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
-"/mnt/data/elastalert-config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
