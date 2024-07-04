@@ -31,6 +31,8 @@ spec:
             - |
               echo "Setting permissions..."
               chmod -R 777 /usr/share/elasticsearch/data
+              echo "Creating fleet-server token";
+              bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token;
 
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/data
@@ -44,12 +46,7 @@ spec:
               add: ["IPC_LOCK"]
           ports:
             - containerPort: 9200
-          command: ["/bin/sh"]
-          args:
-            - -c
-            - |
-              echo "Creating fleet-server token";
-              bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token;
+               
           env:
             - name: node.name
               value: "es01"
