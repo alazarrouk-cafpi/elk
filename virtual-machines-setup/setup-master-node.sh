@@ -27,6 +27,7 @@ mkdir -p /mnt/data/fleet-data
 mkdir -p /mnt/data/kibana-data
 mkdir -p /mnt/data/logstash-data
 
+
 chmod 777 /mnt/data/certs
 chmod 777 /mnt/data/elastalert-config/
 chmod 777 /mnt/data/elastalert-data
@@ -50,6 +51,9 @@ lines_to_add=(
 "/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 )
