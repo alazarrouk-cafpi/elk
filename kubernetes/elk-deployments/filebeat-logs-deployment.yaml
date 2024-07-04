@@ -27,8 +27,8 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              while ! curl -s http://logstash:9600/_node/stats/pipelines | jq '.pipelines.logs.events.duration_in_millis > 0'; do
-                  echo "Waiting for Logstash pipeline 'logs' to be ready..."
+              until [ "$(curl -s -o /dev/null -w "%{http_code}" http://logstash:9600/_node/stats/pipelines)" = "200" ]; do
+                  echo "Logstash is not fully initialized yet. Waiting..."
                   sleep 5
               done
           env:
