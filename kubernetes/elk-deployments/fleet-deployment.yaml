@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fleet
+  template:
+    metadata:
+      labels:
+        app: fleet
+    spec:
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /elastic-agent-8.14.1-linux-x86_64/certs
+              wget https://github.com/moparisthebest/static-curl/releases/download/v7.85.0/curl-amd64
+              mv curl-amd64 /bin/curl
+              chmod +x /bin/curl
+              until curl -k --user elastic:${ELASTIC_PASSWORD} https://es01:9200/_cluster/health?wait_for_status=yellow; do
+                echo "Waiting for Elasticsearch..."
+                sleep 10
+              done
+          env:
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: elk-config
+                  key: ELASTIC_PASSWORD
+      containers:
+        - name: fleet
+          image: elkimages.azurecr.io/fleet:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8220
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' certs/fleet-token | cut -d '=' -f 2 | xargs)
+              yes | ./elastic-agent install \
+                --url=https://fleet:8220 \
+                --fleet-server-es=http://es01:9200 \
+                --fleet-server-service-token=$SERVICE_TOKEN \
+                --fleet-server-policy=fleet-server-policy \
+                --certificate-authorities=/elastic-agent-8.14.1-linux-x86_64/certs/ca/ca.crt \
+                --fleet-server-es-ca=/elastic-agent-8.14.1-linux-x86_64/certs/es01/es01.crt \
+                --fleet-server-cert=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.crt \
+                --fleet-server-cert-key=/elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.key \
+                --fleet-server-port=8220
+
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 1.5Gi
+              cpu: 500m
+
+          volumeMounts:
+            - mountPath: /elastic-agent-8.14.1-linux-x86_64/certs
+              name: certs
+            #- mountPath:  /elastic-agent-8.14.1-linux-x86_64/data
+              #name: fleetdata
+
+      imagePullSecrets:
+          - name: elkimages-secret
+      volumes:
+        - name: certs
+          nfs:
+            server: 10.53.2.115
+            path: /mnt/data/certs
+
+        - name: fleetdata
+          persistentVolumeClaim:
+            claimName: fleetdata-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleet
+spec:
+  type: NodePort
+  ports:
+    - port: 8220         # Port on the service
+      targetPort: 8220   # Port on the pod
+      nodePort: 30002    # Port on the node (choose within the range 30000-32767)
+  selector:
+    app: fleet 
