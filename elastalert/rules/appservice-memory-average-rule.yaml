@@ -1,5 +1,5 @@
 name: "Average Memory utilization Rule"
-type: "custom_modules.appservice_memory_average-module.AppserviceMemoryAverageRule"
+type: "custom_modules.appservice-memory-average-module.AppserviceMemoryAverageRule"
 index: "appservices-metrics-*"
 
 http_post2_url:
