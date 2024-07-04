@@ -72,6 +72,10 @@ spec:
             - mountPath: /usr/share/kibana/data
               name: kibanadata
 
+            - mountPath: /usr/share/kibana/config/kibana.yml
+              name: config
+              subPath: kibana.yml
+
           resources:
             requests:
               memory: 1Gi
@@ -87,6 +91,10 @@ spec:
         - name: kibanadata
           persistentVolumeClaim:
             claimName: kibanadata-pvc
+
+        - name: config
+          configMap:
+            name: kibana-config
 
 ---
 apiVersion: v1
