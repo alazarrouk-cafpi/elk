@@ -27,8 +27,8 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              while ! curl -s http://logstash:9600/_node/pipelines | jq -e '.pipelines.metrics.status == "green"' >/dev/null; do
-                  echo "Waiting for Logstash pipeline 'metrics' to be ready..."
+              while ! curl -s http://logstash:9600/_node/stats/pipelines | jq '.pipelines.metrics.events.duration_in_millis > 0'; do
+                  echo "Waiting for Logstash pipeline 'logs' to be ready..."
                   sleep 5
               done
           env:
