@@ -26,9 +26,9 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              until curl -k --user elastic:${KIBANA_PASSWORD} http://kibana:5601/api/status | grep -q '"state":"green"'; do
-                echo "Waiting for Kibana..."
-                sleep 10
+              until [[ $(curl -s -k --user $USERNAME:$PASSWORD $KIBANA_URL | jq -r '.status.overall.level') == "available" ]]; do
+                  echo "Waiting for Kibana to be available..."
+                  sleep 10
               done
           env:
             - name: ELASTIC_PASSWORD
