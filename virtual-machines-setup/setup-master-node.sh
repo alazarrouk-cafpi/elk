@@ -79,6 +79,7 @@ microk8s kubectl apply -f elk-main/kubernetes/configMaps/env-configMap.yaml
 microk8s kubectl apply -f elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
 microk8s kubectl apply -f elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
 microk8s kubectl apply -f elk-main/kubernetes/configMaps/logstash-configMap.yaml
+microk8s kubectl apply -f elk-main/kubernetes/configMaps/kibana-configMap.yaml
 #setup pv's
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/certs-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
