@@ -48,7 +48,7 @@ spec:
               SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' certs/fleet-token | cut -d '=' -f 2 | xargs)
               yes | ./elastic-agent install \
                 --url=https://fleet:8220 \
-                --fleet-server-es=http://es01:9200 \
+                --fleet-server-es=https://es01:9200 \
                 --fleet-server-service-token=$SERVICE_TOKEN \
                 --fleet-server-policy=fleet-server-policy \
                 --certificate-authorities=/elastic-agent-8.14.1-linux-x86_64/certs/ca/ca.crt \
