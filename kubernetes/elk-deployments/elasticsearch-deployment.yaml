@@ -34,70 +34,7 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/data
               name: esdata
-        - name: init-elasstic
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
-          securityContext:
-            privileged: true
-            capabilities:
-              add: ["IPC_LOCK"]
-          command: ["/bin/sh"]
-          args:
-            - -c
-            - |
-              echo "Creating fleet-server token";
-              bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token;
-          env:
-            - name: node.name
-              value: "es01"
-            - name: cluster.name
-              valueFrom:
-                configMapKeyRef:
-                  name: elk-config
-                  key: CLUSTER_NAME
-            - name: ELASTIC_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: elk-config
-                  key: ELASTIC_PASSWORD
-            - name: ES_MEM_LIMIT
-              valueFrom:
-                configMapKeyRef:
-                  name: elk-config
-                  key: ES_MEM_LIMIT
-            - name: discovery.type
-              value: single-node
-            - name: ES_JAVA_OPTS
-              value: "-Xms1g -Xmx1g"
-            - name: bootstrap.memory_lock
-              value: "true"
-            - name: xpack.security.enabled
-              value: "true"
-            - name: xpack.security.http.ssl.enabled
-              value: "true"
-            - name: xpack.security.http.ssl.key
-              value: "/usr/share/elasticsearch/config/certs/es01/es01.key"
-            - name: xpack.security.http.ssl.certificate
-              value: "/usr/share/elasticsearch/config/certs/es01/es01.crt"
-            - name: xpack.security.http.ssl.certificate_authorities
-              value: "/usr/share/elasticsearch/config/certs/ca/ca.crt"
-            - name: xpack.security.transport.ssl.enabled
-              value: "true"
-            - name: xpack.security.transport.ssl.key
-              value: "/usr/share/elasticsearch/config/certs/es01/es01.key"
-            - name: xpack.security.transport.ssl.certificate
-              value: "/usr/share/elasticsearch/config/certs/es01/es01.crt"
-            - name: xpack.security.transport.ssl.certificate_authorities
-              value: "/usr/share/elasticsearch/config/certs/ca/ca.crt"
-            - name: xpack.security.transport.ssl.verification_mode
-              value: "certificate"
-            - name: xpack.license.self_generated.type
-              valueFrom:
-                configMapKeyRef:
-                  name: elk-config
-                  key: LICENSE
-          volumeMounts:
-            - mountPath: /usr/share/elasticsearch/config/certs
-              name: certs
+          
 
       containers:
         - name: es01
@@ -171,6 +108,10 @@ spec:
             limits:
               memory: 6Gi
               cpu: 1000m
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token"]
       volumes:
         - name: certs
           persistentVolumeClaim:
