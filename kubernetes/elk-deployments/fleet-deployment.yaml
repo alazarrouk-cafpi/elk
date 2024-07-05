@@ -26,7 +26,7 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              until [[ $(curl -s -k --user elastic:Aloulou556 http://kibana:5601/api/status | jq -r '.status.overall.level') == "available" ]]; do
+              until [ "$(curl -s -k --user elastic:Aloulou556 http://kibana:5601/api/status | jq -r '.status.overall.level')" = "available" ]; do
                   echo "Waiting for Kibana to be available..."
                   sleep 10
               done
