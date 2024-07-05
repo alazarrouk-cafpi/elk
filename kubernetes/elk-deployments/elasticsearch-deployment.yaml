@@ -97,6 +97,8 @@ spec:
                   name: elk-config
                   key: LICENSE
           volumeMounts:
+            - mountPath: /usr/share/elasticsearch/config
+              name: esconfig
             - mountPath: /usr/share/elasticsearch/config/certs
               name: certs
             - mountPath: /usr/share/elasticsearch/data
@@ -116,7 +118,7 @@ spec:
                   - sh
                   - -c
                   - |
-                    bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/data/fleet-token 2> /usr/share/elasticsearch/data/fleet-token-error.log
+                    bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/fleet-token 2> /usr/share/elasticsearch/config/fleet-token-error.log
       volumes:
         - name: certs
           persistentVolumeClaim:
@@ -125,6 +127,9 @@ spec:
         - name: esdata
           persistentVolumeClaim:
             claimName: esdata-pvc
+        - name: esconfig
+          persistentVolumeClaim:
+            claimName: esconfig-pvc
 ---
 apiVersion: v1
 kind: Service

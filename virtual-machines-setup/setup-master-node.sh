@@ -21,6 +21,7 @@ mkdir -p /mnt/data/elastalert-config/custom_modules
 mkdir -p /mnt/data/elastalert-config/rules
 mkdir -p /mnt/data/elastalert-data
 mkdir -p /mnt/data/es-data
+mkdir -p /mnt/data/es-config
 mkdir -p /mnt/data/filebeatlogs-data
 mkdir -p /mnt/data/filebeatmetrics-data
 mkdir -p /mnt/data/fleet-data
@@ -32,6 +33,7 @@ chmod 777 /mnt/data/certs
 chmod 777 /mnt/data/elastalert-config/
 chmod 777 /mnt/data/elastalert-data
 chmod 777 /mnt/data/es-data
+chmod 777 /mnt/data/es-config
 chmod 777 /mnt/data/filebeatlogs-data
 chmod 777 /mnt/data/filebeatmetrics-data
 chmod 777 /mnt/data/fleet-data
@@ -49,6 +51,7 @@ lines_to_add=(
 "/mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
+"/mnt/data/es-config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
 "/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
@@ -87,6 +90,7 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-mod
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-config-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
@@ -99,6 +103,7 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastale
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/elasticsearch-config-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
