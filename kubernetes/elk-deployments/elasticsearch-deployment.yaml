@@ -46,7 +46,6 @@ spec:
             - |
               echo "Creating fleet-server token";
               bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token;
-              exec bin/elasticsearch
           env:
             - name: node.name
               value: "es01"
