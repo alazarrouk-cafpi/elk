@@ -37,8 +37,6 @@ spec:
             privileged: true
             capabilities:
               add: ["IPC_LOCK"]
-          ports:
-            - containerPort: 9200
           command: ["/bin/sh"]
           args:
             - -c
