@@ -31,6 +31,8 @@ spec:
             - |
               echo "Setting permissions..."
               chmod -R 777 /usr/share/elasticsearch/data
+          - mountPath: /usr/share/elasticsearch/data
+            name: esdata
         - name: init-elasstic
           image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
           securityContext:
