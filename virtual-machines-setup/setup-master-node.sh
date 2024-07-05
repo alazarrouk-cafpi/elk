@@ -90,7 +90,7 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-mod
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
-microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-config-pv .yaml
+microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/elasticsearch-config-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
