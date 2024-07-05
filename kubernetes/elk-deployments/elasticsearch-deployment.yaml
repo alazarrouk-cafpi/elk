@@ -1,4 +1,3 @@
-# elasticsearch.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,12 +29,14 @@ spec:
             - -c
             - |
               echo "Setting permissions..."
+              mkdir -p /usr/share/elasticsearch/config/certs
+              chmod -R 777 /usr/share/elasticsearch/config/certs
               chmod -R 777 /usr/share/elasticsearch/data
           volumeMounts:
+            - mountPath: /usr/share/elasticsearch/config/certs
+              name: certs
             - mountPath: /usr/share/elasticsearch/data
               name: esdata
-          
-
       containers:
         - name: es01
           image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
@@ -111,7 +112,11 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token"]
+                command: 
+                  - sh
+                  - -c
+                  - |
+                    bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/config/certs/fleet-token 2>/usr/share/elasticsearch/config/certs/fleet-token-error.log
       volumes:
         - name: certs
           persistentVolumeClaim:
