@@ -49,7 +49,7 @@ spec:
           args:
             - -c
             - |
-              SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' certs/fleet-token | cut -d '=' -f 2 | xargs)
+              SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' esdata/fleet-token | cut -d '=' -f 2 | xargs)
               echo $SERVICE_TOKEN
               curl --cacert certs/ca/ca.crt -H "Authorization: Bearer $SERVICE_TOKEN" https://es01:9200/_security/_authenticate
               echo 'y' | ./elastic-agent install \
