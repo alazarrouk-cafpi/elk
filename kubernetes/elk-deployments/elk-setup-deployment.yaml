@@ -35,6 +35,10 @@ spec:
                   key: STACK_VERSION
           args:
             - |
+              echo "package installation"
+              wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+              chmod +x jq
+              mv jq /bin/jq
               if [ x${ELASTIC_PASSWORD} == x ]; then
                 echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
                 exit 1;
@@ -94,6 +98,7 @@ spec:
               until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; 
                 do sleep 30; 
               done;
+
               echo "Setting kibana_system password";
               until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
               echo "Waiting for kibana availability"; 
@@ -101,6 +106,7 @@ spec:
                   echo "Waiting for Kibana to be available..."
                   sleep 10
               done
+
               echo "creating fleet server";
               curl -u elastic:Aloulou556 \
               --request POST \
