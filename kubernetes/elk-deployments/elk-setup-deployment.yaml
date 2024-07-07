@@ -36,7 +36,7 @@ spec:
           args:
             - |
               echo "package installation"
-              wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+              curl -L -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
               if [ x${ELASTIC_PASSWORD} == x ]; then
