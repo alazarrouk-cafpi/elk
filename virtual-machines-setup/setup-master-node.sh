@@ -105,7 +105,7 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pv
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
 #setup deployments
-microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/certs-setup-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elk-setup-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
