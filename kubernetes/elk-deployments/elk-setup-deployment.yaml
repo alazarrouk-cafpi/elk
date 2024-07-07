@@ -118,7 +118,7 @@ spec:
                 "name": "Fleet Server",
                 "is_default": true,
                 "host_urls": [
-                  "https://10.53.2.115:30002"
+                  "https://fleet:8220"
                 ]
               }'
               echo "All done!";
