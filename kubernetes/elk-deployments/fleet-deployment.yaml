@@ -69,8 +69,8 @@ spec:
               memory: 1Gi
               cpu: 500m
             limits:
-              memory: 1.5Gi
-              cpu: 500m
+              memory: 2Gi
+              cpu: 600m
 
           volumeMounts:
             - mountPath: /elastic-agent-8.14.1-linux-x86_64/esdata
