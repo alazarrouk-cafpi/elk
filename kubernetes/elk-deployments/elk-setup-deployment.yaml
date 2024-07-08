@@ -147,7 +147,7 @@ spec:
               --data '{"id":"windows-policy","name":"Windows agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}'
 
               echo "Assigning windows integration to the agent agent policy" 
-              curl -k -s -u "elastic:${ELASTIC_PASSWORD}"" \
+              curl -k -s -u "elastic:${ELASTIC_PASSWORD}" \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
