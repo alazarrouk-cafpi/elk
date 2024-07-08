@@ -123,7 +123,7 @@ spec:
               }'
 
               echo "Configuring fleet server output to elasticsearch";
-              curl -u "elastic:${ELASTIC_PASSWORD}" \
+              curl -u `elastic:${ELASTIC_PASSWORD}` \
               --request PUT \
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
@@ -140,7 +140,7 @@ spec:
               }'
 
               echo "Creating windows agent policy"
-              curl -u elastic:${ELASTIC_PASSWORD}" --request POST \
+              curl -u `elastic:${ELASTIC_PASSWORD}` --request POST \
               --url http://kibana:5601/api/fleet/agent_policies?sys_monitoring=true \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
