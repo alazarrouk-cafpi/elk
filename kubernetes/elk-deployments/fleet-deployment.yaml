@@ -53,7 +53,7 @@ spec:
               echo $SERVICE_TOKEN
               curl --cacert certs/ca/ca.crt -H "Authorization: Bearer $SERVICE_TOKEN" https://es01:9200/_security/_authenticate
               echo 'y' | ./elastic-agent install \
-              --url=https://fleet:8220 \
+              --url=https://10.53.2.115:30002 \
               --fleet-server-es=https://es01:9200 \
               --fleet-server-service-token=$SERVICE_TOKEN \
               --fleet-server-policy=fleet-server-policy \

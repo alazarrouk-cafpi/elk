@@ -118,7 +118,7 @@ spec:
                 "name": "Fleet Server",
                 "is_default": true,
                 "host_urls": [
-                  "https://fleet:8220"
+                  "https://10.53.2.115:30002"
                 ]
               }'
 
