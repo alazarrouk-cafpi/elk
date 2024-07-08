@@ -108,7 +108,7 @@ spec:
               done
 
               echo "Creating fleet server";
-              curl -u `elastic:${ELASTIC_PASSWORD}` \
+              curl -u elastic:Aloulou556 \
               --request POST \
               --url http://kibana:5601/api/fleet/fleet_server_hosts \
               --header 'content-type: application/json' \
@@ -123,7 +123,7 @@ spec:
               }'
 
               echo "Configuring fleet server output to elasticsearch";
-              curl -u `elastic:${ELASTIC_PASSWORD}` \
+              curl -u elastic:Aloulou556 \
               --request PUT \
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
@@ -131,14 +131,14 @@ spec:
               --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://es01:9200"],"config_yaml": "ssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
 
               echo "Creating windows agent policy"
-              curl -u `elastic:${ELASTIC_PASSWORD}` --request POST \
+              curl -u elastic:Aloulou556 --request POST \
               --url http://kibana:5601/api/fleet/agent_policies?sys_monitoring=true \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
               --data '{"id":"windows-policy","name":"Windows agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}'
 
               echo "Assigning windows integration to the agent agent policy" 
-              curl -k -s -u "elastic:${ELASTIC_PASSWORD}" \
+              curl -k -s -u elastic:Aloulou556 \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
