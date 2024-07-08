@@ -108,7 +108,7 @@ spec:
               done
 
               echo "Creating fleet server";
-              curl -u elastic:Aloulou556 \
+              curl -u `elastic:${ELASTIC_PASSWORD}` \
               --request POST \
               --url http://kibana:5601/api/fleet/fleet_server_hosts \
               --header 'content-type: application/json' \
