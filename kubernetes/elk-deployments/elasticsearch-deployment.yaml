@@ -109,14 +109,6 @@ spec:
             limits:
               memory: 6Gi
               cpu: 1000m
-          lifecycle:
-            postStart:
-              exec:
-                command: 
-                  - sh
-                  - -c
-                  - |
-                    bin/elasticsearch-service-tokens create elastic/fleet-server fleet-token > /usr/share/elasticsearch/data/fleet-token 2> /usr/share/elasticsearch/data/fleet-token-error.log
       volumes:
         - name: certs
           persistentVolumeClaim:
