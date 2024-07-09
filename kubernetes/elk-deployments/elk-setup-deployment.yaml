@@ -128,7 +128,7 @@ spec:
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
-              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://es01:9200"],"config_yaml": "ssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
+              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.115:30000"],"config_yaml": "ssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
 
               echo "Creating windows agent policy"
               curl -u elastic:Aloulou556 --request POST \
