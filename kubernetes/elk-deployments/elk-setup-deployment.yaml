@@ -123,8 +123,7 @@ spec:
               }'
 
               echo "Configuring fleet server output to elasticsearch";
-              curl -u elastic:Aloulou556 \
-              --request PUT \
+              curl -u elastic:Aloulou556 --request PUT \
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
