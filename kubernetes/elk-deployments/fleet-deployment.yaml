@@ -49,7 +49,10 @@ spec:
           args:
             - -c
             - |
-              SERVICE_TOKEN=$(grep 'SERVICE_TOKEN' esdata/fleet-token | cut -d '=' -f 2 | xargs)
+              curl -L -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+              chmod +x jq
+              mv jq /bin/jq
+              SERVICE_TOKEN=$(curl -X POST --cacert certs/ca/ca.crt --user elastic:Aloulou556 "https://es01:9200/_security/service/elastic/fleet-server/credential/token?pretty" | jq -r '.token.value')
               echo $SERVICE_TOKEN
               curl --cacert certs/ca/ca.crt -H "Authorization: Bearer $SERVICE_TOKEN" https://es01:9200/_security/_authenticate
               echo 'y' | ./elastic-agent install \
