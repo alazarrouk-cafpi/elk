@@ -107,12 +107,12 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash
 #setup deployments
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elk-setup-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
-microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
+#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/fleet-deployment.yaml
-microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
-microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
-microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
+#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
+#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
 
 
 
