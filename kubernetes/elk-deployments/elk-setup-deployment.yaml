@@ -61,24 +61,31 @@ spec:
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                "      - 10.53.2.115\n"\
+
                 "  - name: kibana\n"\
                 "    dns:\n"\
                 "      - kibana\n"\
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                "      - 10.53.2.115\n"\
+
                 "  - name: logstash\n"\
                 "    dns:\n"\
                 "      - logstash\n"\
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                
                 "  - name: fleet\n"\
                 "    dns:\n"\
                 "      - fleet\n"\
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                "      - 10.53.2.115\n"\
+
                 "  - name: elastalert2\n"\
                 "    dns:\n"\
                 "      - elastalert2\n"\
