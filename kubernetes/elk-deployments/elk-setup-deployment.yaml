@@ -124,6 +124,11 @@ spec:
                   "https://10.53.2.115:30002"
                 ]
               }'
+              echo "Configuring fleet server output to elasticsearch";
+              curl -k -s -u "elastic:Aloulou556" \
+              -XPUT -H "kbn-xsrf: kibana" -H "Content-type: application/json" \
+              "http://kibana:5601/api/fleet/outputs/fleet-default-output" \
+              -d '{"hosts": ["https://10.53.2.115:30000"], "config_yaml": "ssl.verification_mode: certificate\nssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
 
               echo "Creating windows agent policy"
               curl -u elastic:Aloulou556 --request POST \
@@ -138,11 +143,6 @@ spec:
               "http://kibana:5601/api/fleet/package_policies" \
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
               
-              echo "Configuring fleet server output to elasticsearch";
-              curl -k -s -u "elastic:Aloulou556" \
-              -XPUT -H "kbn-xsrf: kibana" -H "Content-type: application/json" \
-              "http://kibana:5601/api/fleet/outputs/fleet-default-output" \
-              -d '{"hosts": ["https://10.53.2.115:30000"], "config_yaml": "ssl.verification_mode: certificate\nssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
               
               echo "All done!";
           volumeMounts:

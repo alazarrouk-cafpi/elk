@@ -24,4 +24,3 @@ data:
           - name: fleet_server-1
             package:
               name: fleet_server
-
