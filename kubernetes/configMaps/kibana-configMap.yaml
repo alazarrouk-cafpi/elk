@@ -24,13 +24,4 @@ data:
           - name: fleet_server-1
             package:
               name: fleet_server
-    xpack.fleet.outputs:
-      - id: fleet-default-output
-        name: default
-        type: elasticsearch
-        hosts: ["https://10.53.2.115:30000"]
-        is_default: true
-        is_default_monitoring: true
-        ssl:
-          certificate_authorities: ["/config/certs/ca/ca.crt"]
 
