@@ -125,10 +125,12 @@ spec:
                 ]
               }'
               echo "Configuring fleet server output to elasticsearch";
-              curl -k -s -u "elastic:Aloulou556" \
-              -XPUT -H "kbn-xsrf: kibana" -H "Content-type: application/json" \
-              "http://kibana:5601/api/fleet/outputs/fleet-default-output" \
-              -d '{"hosts": ["https://10.53.2.115:30000"], "config_yaml": "ssl.verification_mode: certificate\nssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
+              curl -u elastic:Aloulou556 --request POST \
+              --url http://kibana:5601/api/fleet/outputs \
+              --header 'content-type: application/json' \
+              --header 'kbn-xsrf: true' \
+              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.115:30000"],"config_yaml": "ssl.verification_mode: certificate\nssl.certificate_authorities: [\"/config/certs/ca/ca.crt\"]"}'
+
 
               echo "Creating windows agent policy"
               curl -u elastic:Aloulou556 --request POST \
