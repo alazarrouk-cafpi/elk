@@ -157,12 +157,27 @@ spec:
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
               --data '{"id":"windows-policy","name":"Windows agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}'
+              
+              echo "Creating linux agent policy"
+              curl -u elastic:Aloulou556 --request POST \
+              --url http://kibana:5601/api/fleet/agent_policies?sys_monitoring=true \
+              --header 'content-type: application/json' \
+              --header 'kbn-xsrf: true' \
+              --data '{"id":"linux-policy","name":"Linux agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}' 
 
-              echo "Assigning windows integration to the agent agent policy" 
+
+              echo "Assigning windows integration to the windows agent policy" 
               curl -k -s -u elastic:Aloulou556 \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
+              
+
+              echo "Assigning system  integration to the linux agent policy" 
+              curl -k -s -u elastic:Aloulou556 \
+              -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
+              "http://kibana:5601/api/fleet/package_policies" \
+              -d '{"name": "system-integration", "namespace": "default", "policy_id":"linux-policy", "package":{"name": "system", "version": "1.59.0"}}'
               
               
               echo "All done!";
