@@ -173,11 +173,11 @@ spec:
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
               
 
-              echo "Assigning system  integration to the linux agent policy" 
+              echo "Assigning sysmon integration to the linux agent policy" 
               curl -k -s -u elastic:Aloulou556 \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \
-              -d '{"name": "system-integration", "namespace": "default", "policy_id":"linux-policy", "package":{"name": "system", "version": "1.59.0"}}'
+              -d '{"name": "symon-integration", "namespace": "default", "policy_id":"linux-policy", "package":{"name": "sysmon_linux", "version": "1.59.0"}}'
               
               
               echo "All done!";
