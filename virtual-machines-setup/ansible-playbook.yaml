@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Creating resource group
+      azure_rm_resourcegroup:
+        name: "my-rg12"
+        location: "eastus"
