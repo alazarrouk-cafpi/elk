@@ -7,13 +7,13 @@ CREATE TABLE [dbo].[azure_virtualmachine_sku] (
     [iops]         INT           NULL,
     [localstorage] VARCHAR (255) NULL,
 );
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage) VALUES ('B1s', '1', '1', '2',320,'4');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage) VALUES ('B1ms', '1', '2', '2',640,'4');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('B2s', '2', '4', '4',1280,'8');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('B2ms', '2', '8', '4',1920,'16');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage) VALUES ('B4ms', '4', '16', '8',2880,'32');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage) VALUES ('D2s_v3', '2', '8', '4',3200,'16');
-INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage) VALUES ('D4as_v4', '4', '16', '8',6400,'32');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_B1s', '1', '1', '2',320,'4');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_B1ms', '1', '2', '2',640,'4');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_B2s', '2', '4', '4',1280,'8');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_B2ms', '2', '8', '4',1920,'16');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_B4ms', '4', '16', '8',2880,'32');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_D2s_v3', '2', '8', '4',3200,'16');
+INSERT INTO azure_virtualmachine_sku (name, vcpu, memory,disks ,iops,localstorage)  VALUES ('Standard_D2as_v4', '4', '16', '8',6400,'32');
 
 CREATE TABLE [dbo].[azure_appserviceplan_sku] (
     [id]      INT           IDENTITY (1, 1) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE [dbo].[alert] (
     [date]                DATETIME      NULL,
     [value]               VARCHAR (255) NULL,
     [azure_resource_name] VARCHAR (255) NULL,
-    [state]               VARCHAR (50)  NULL,
+    [state]               VARCHAR (50)  NOT NULL
     [appserviceplan_id]   VARCHAR (MAX) NULL,
     [virtualmachine_id]   VARCHAR (MAX) NULL,
     [optimization_id]     INT           NULL,
