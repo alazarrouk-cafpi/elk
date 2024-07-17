@@ -5,29 +5,29 @@
 #microk8s kubectl label node node02-k8s node-role.kubernetes.io/worker=worker
 
 
-rm -rf /mnt/data/*
-mkdir -p /mnt/data/certs
-mkdir -p /mnt/data/elastalert-config/config
-mkdir -p /mnt/data/elastalert-config/custom_modules
-mkdir -p /mnt/data/elastalert-config/rules
-mkdir -p /mnt/data/elastalert-data
-mkdir -p /mnt/data/es-data
-mkdir -p /mnt/data/filebeatlogs-data
-mkdir -p /mnt/data/filebeatmetrics-data
-mkdir -p /mnt/data/fleet-data
-mkdir -p /mnt/data/kibana-data
-mkdir -p /mnt/data/logstash-data
+sudo rm -rf /mnt/data/*
+sudo mkdir -p /mnt/data/certs
+sudo mkdir -p /mnt/data/elastalert-config/config
+sudo mkdir -p /mnt/data/elastalert-config/custom_modules
+sudo mkdir -p /mnt/data/elastalert-config/rules
+sudo mkdir -p /mnt/data/elastalert-data
+sudo mkdir -p /mnt/data/es-data
+sudo mkdir -p /mnt/data/filebeatlogs-data
+sudo mkdir -p /mnt/data/filebeatmetrics-data
+sudo mkdir -p /mnt/data/fleet-data
+sudo mkdir -p /mnt/data/kibana-data
+sudo mkdir -p /mnt/data/logstash-data
 
 
-chmod 777 /mnt/data/certs
-chmod 777 /mnt/data/elastalert-config/
-chmod 777 /mnt/data/elastalert-data
-chmod 777 /mnt/data/es-data
-chmod 777 /mnt/data/filebeatlogs-data
-chmod 777 /mnt/data/filebeatmetrics-data
-chmod 777 /mnt/data/fleet-data
-chmod 777 /mnt/data/kibana-data
-chmod 777 /mnt/data/logstash-data
+sudo chmod 777 /mnt/data/certs
+sudo chmod 777 /mnt/data/elastalert-config/
+sudo chmod 777 /mnt/data/elastalert-data
+sudo chmod 777 /mnt/data/es-data
+sudo chmod 777 /mnt/data/filebeatlogs-data
+sudo chmod 777 /mnt/data/filebeatmetrics-data
+sudo chmod 777 /mnt/data/fleet-data
+sudo chmod 777 /mnt/data/kibana-data
+sudo chmod 777 /mnt/data/logstash-data
 
 #---Nfs configuration
 sudo apt-get update
@@ -64,12 +64,12 @@ microk8s kubectl create secret docker-registry elkimages-secret \
     --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
     --docker-password=sQj8Q~vEyiZAsr4xk3b8RNHBA8MJvLkFXFaj~a7Q
 #----Creating kubernetes resources 
-curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
-unzip elk.zip 
+#curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
+#unzip elk.zip 
 #coping elastalert folders 
-cp -r elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
-cp -r elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
-cp -r elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
+sudo cp -r elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
+sudo cp -r elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
+sudo cp -r elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
 
 #setup configMaps
 microk8s kubectl apply -f elk-main/kubernetes/configMaps/env-configMap.yaml
