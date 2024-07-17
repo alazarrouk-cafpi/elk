@@ -1,18 +1,18 @@
 #!/bin/bash
-#sudo apt-get update 
-#sudo apt install curl net-tools wget unzip openjdk-17-jdk -y
-#sudo snap install microk8s --classic
-#sudo usermod -a -G microk8s admala
-#newgrp microk8s
-#sudo usermod -a -G microk8s admala
-#mkdir -p ~/.kube
-#chmod 0700 ~/.kube
-#chown -R admala ~/.kube
-#microk8s status --wait-ready
-#microk8s enable dns
-#microk8s enable storage
-#microk8s add-node | grep 'microk8s join' | grep -- '--worker' | sed 's/^ *//'
-#microk8s add-node | grep 'microk8s join' | grep -- '--worker' | sed 's/^ *//'
+sudo apt-get update 
+sudo apt install curl net-tools wget unzip openjdk-17-jdk -y
+sudo snap install microk8s --classic
+sudo usermod -a -G microk8s admala
+newgrp microk8s
+sudo usermod -a -G microk8s admala
+mkdir -p ~/.kube
+chmod 0700 ~/.kube
+chown -R admala ~/.kube
+microk8s status --wait-ready
+microk8s enable dns
+microk8s enable storage
+microk8s add-node | grep 'microk8s join' | grep -- '--worker' | sed 's/^ *//'
+microk8s add-node | grep 'microk8s join' | grep -- '--worker' | sed 's/^ *//'
 
 #microk8s kubectl label node master-k8s node-role.kubernetes.io/master=master
 #microk8s kubectl label node node01-k8s node-role.kubernetes.io/worker=worker
@@ -44,9 +44,9 @@ chmod 777 /mnt/data/kibana-data
 chmod 777 /mnt/data/logstash-data
 
 #---Nfs configuration
-#sudo apt-get update
-#sudo apt-get install nfs-kernel-server -y
-#sudo apt-get enable nfs-kernel-server -y
+sudo apt-get update
+sudo apt-get install nfs-kernel-server -y
+sudo apt-get enable nfs-kernel-server -y
 
 lines_to_add=(
 "/mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"
@@ -72,11 +72,11 @@ sudo systemctl restart nfs-kernel-server
 
 
 #---container registery service principle secret 
-#microk8s kubectl create secret docker-registry elkimages-secret \
-#    --namespace default \
-#    --docker-server=elkimages.azurecr.io \
-#    --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
-#    --docker-password=sQj8Q~vEyiZAsr4xk3b8RNHBA8MJvLkFXFaj~a7Q
+microk8s kubectl create secret docker-registry elkimages-secret \
+    --namespace default \
+    --docker-server=elkimages.azurecr.io \
+    --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
+    --docker-password=sQj8Q~vEyiZAsr4xk3b8RNHBA8MJvLkFXFaj~a7Q
 #----Creating kubernetes resources 
 curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
 unzip elk.zip 
@@ -118,12 +118,12 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash
 #setup deployments
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elk-setup-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
-#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/fleet-deployment.yaml
-#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
-#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
-#microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
+microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
 
 
 
