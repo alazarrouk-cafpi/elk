@@ -61,7 +61,7 @@ spec:
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
-                "      - 135.236.136.224\n"\
+                "      - 10.53.2.15\n"\
                 "      - 10.53.2.115\n"\
                 "      - 10.53.2.116\n"\
                 "      - 10.53.2.117\n"\
@@ -71,7 +71,7 @@ spec:
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
-                "      - 135.236.136.224\n"\
+                "      - 10.53.2.15\n"\
                 "      - 10.53.2.115\n"\
                 "      - 10.53.2.116\n"\
                 "      - 10.53.2.117\n"\
@@ -81,13 +81,17 @@ spec:
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
+                "      - 10.53.2.15\n"\
+                "      - 10.53.2.115\n"\
+                "      - 10.53.2.116\n"\
+                "      - 10.53.2.117\n"\
                 "  - name: fleet\n"\
                 "    dns:\n"\
                 "      - fleet\n"\
                 "      - localhost\n"\
                 "    ip:\n"\
                 "      - 127.0.0.1\n"\
-                "      - 135.236.136.224\n"\
+                "      - 10.53.2.15\n"\
                 "      - 10.53.2.115\n"\
                 "      - 10.53.2.116\n"\
                 "      - 10.53.2.117\n"\
@@ -130,7 +134,7 @@ spec:
                 "name": "Fleet Server",
                 "is_default": true,
                 "host_urls": [
-                  "https://135.236.136.224:30002"
+                  "https://10.53.2.15:30002"
                 ]
               }'
 
@@ -141,14 +145,14 @@ spec:
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
-              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://135.236.136.224:30000"]}'
+              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.15:30000"]}'
 
               echo "Configuring fleet server output to elasticsearch";
               curl -u elastic:Aloulou556 --request POST \
               --url http://kibana:5601/api/fleet/outputs \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
-              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://135.236.136.224:30000"]}'
+              --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.15:30000"]}'
 
 
               echo "Creating windows agent policy"

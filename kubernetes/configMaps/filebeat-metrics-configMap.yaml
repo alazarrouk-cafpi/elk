@@ -8,8 +8,8 @@ data:
     - type: azure-blob-storage
       id: azurestmonitoringcafpi01
       enabled: true
-      account_name: sapfe01
-      auth.shared_credentials.account_key: mSgBse/6pJBEdGD0/llQSdpf5Vh4HVZiCJ8xawLL5q5N/uMG+AncFT5n6VNI8NbXVVacGUtUqnss+AStcrlhZQ==
+      account_name: sapfe
+      auth.shared_credentials.account_key: JYUQkMiI6C8G6uTbgKfpX0XY4ubTZSl3WSLJ8Omn/fj2LCDiBx1DUMlNCDsnkvw/Hf/PWn7kS0ns+AStF308RA==
       containers:
       - name: insights-metrics-pt1m
         max_workers: 3
