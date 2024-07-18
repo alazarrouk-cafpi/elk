@@ -15,6 +15,10 @@ data:
         max_workers: 3
         poll: true
         poll_interval: 60s
+      - name: insights-logs-auditlogs
+        max_workers: 3
+        poll: true
+        poll_interval: 60s
     filebeat.config.modules:
       path: ${path.config}/modules.d/*.yml
       reload.enabled: false

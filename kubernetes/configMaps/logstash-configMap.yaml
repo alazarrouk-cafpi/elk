@@ -50,6 +50,16 @@ data:
           '
         }
       }
+      if [azure][storage][container][name] == "insights-logs-auditlogs" {
+        ruby {
+          code => '
+            begin
+            puts event.get("time")
+
+            end
+          '
+        }
+      }
     }
 
     output {

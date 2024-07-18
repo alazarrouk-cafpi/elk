@@ -11,9 +11,6 @@ chown -R admala ~/.kube
 microk8s status --wait-ready
 microk8s enable dns
 microk8s enable storage
-
-
-#---Nfs configuration
 sudo apt-get install nfs-common -y 
 sudo modprobe nf_conntrack
 echo "net.netfilter.nf_conntrack_max=131072" | sudo tee -a /etc/sysctl.conf
