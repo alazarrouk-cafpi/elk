@@ -21,7 +21,7 @@ steps:
   
 - script: |
     # Run Ansible playbook to create resource group
-    ansible-playbook /virtual-machines-setup/ansible-playbook.yml
+    ansible-playbook ansible-playbook.yml
   displayName: 'Run Ansible Playbook'
   env:
     AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
