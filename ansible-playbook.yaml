@@ -6,7 +6,7 @@
       azure_rm_webapp:
         resource_group: "RG-PFE"
         name: "mocazi-app"
-        state: stopped
+        app_state : stopped
       register: webapp
     - name: Display result
       debug:
