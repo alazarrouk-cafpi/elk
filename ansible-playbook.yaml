@@ -3,6 +3,11 @@
   connection: local
   tasks:
     - name: Creating resource group
-      azure_rm_resourcegroup:
-        name: "my-rg12"
-        location: "eastus"
+      azure_rm_webapp:
+        resource_group: "RG-PFE"
+        name: "mocazi-app"
+        state: stopped
+      register: webapp
+    - name: Display result
+      debug:
+        var: webapp

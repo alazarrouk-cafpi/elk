@@ -25,13 +25,12 @@ data:
         ruby {
           code => '
             begin
-              puts "data"
               properties_hash = event.get("data")["properties"]
               dataparsed=JSON.parse(properties_hash)
               check=dataparsed["CsHost"].include?("scm")
-              if !check 
+              if !check
                 cip=dataparsed["CIp"].include?("127.0.0.1")
-                if !cip 
+                if !cip
                   puts "not a local client"
                   appservice=dataparsed["CsHost"].split(".").first
                   event.set("data.httplogs.appservice", appservice)
@@ -52,24 +51,47 @@ data:
       }
       if [azure][storage][container][name] == "insights-logs-auditlogs" {
         ruby {
-          code => '
-            begin
-            puts event.get("time")
-
-            end
-          '
+            code => '
+              begin
+                  if event.get("data")["properties"]["initiatedBy"]["app"]
+                     event.set("data.actionner", event.get("data")["properties"]["initiatedBy"]["app"]["displayName"])
+                  else
+                     event.set("data.actionner", event.get("data")["properties"]["initiatedBy"]["user"]["userPrincipalName"])
+                  end
+                  if event.get("data")["properties"]["targetResources"][0]["userPrincipaleName"]
+                     event.set("data.target", event.get("data")["properties"]["targetResources"][0]["userPrincipaleName"])
+                  else
+                     event.set("data.target", event.get("data")["properties"]["targetResources"][0]["displayName"])
+                  end
+                   event.set("data.targetType", event.get("data")["properties"]["targetResources"][0]["type"])
+                  puts "data logs"
+                  puts "----------------------------------------------------------------------------------------------------------------------------------"
+                  puts event.get("data")["properties"]["targetResources"][0]["type"]
+              end
+            '
         }
       }
     }
 
     output {
-      if [type] == "filebeat-logs" {
+      if [azure][storage][container][name] == "insights-logs-appservicehttplogs" {
         elasticsearch {
           hosts => ["https://es01:9200"]
           user => "elastic"
           password => "Aloulou556"
           document_id => "%{[@metadata][_id]}"
           index => "appservice-httplogs-%{+YYYY.MM.dd}"
+          ssl => true
+          cacert => "/usr/share/logstash/certs/ca/ca.crt"
+        }
+      }
+      if [azure][storage][container][name] == "insights-logs-auditlogs" {
+        elasticsearch {
+          hosts => ["https://es01:9200"]
+          user => "elastic"
+          password => "Aloulou556"
+          document_id => "%{[@metadata][_id]}"
+          index => "entraid-logs-%{+YYYY.MM.dd}"
           ssl => true
           cacert => "/usr/share/logstash/certs/ca/ca.crt"
         }
