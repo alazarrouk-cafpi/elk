@@ -64,9 +64,6 @@ data:
                      event.set("data.target", event.get("data")["properties"]["targetResources"][0]["displayName"])
                   end
                    event.set("data.targetType", event.get("data")["properties"]["targetResources"][0]["type"])
-                  puts "data logs"
-                  puts "----------------------------------------------------------------------------------------------------------------------------------"
-                  puts event.get("data")["properties"]["targetResources"][0]["type"]
               end
             '
         }
@@ -86,6 +83,17 @@ data:
         }
       }
       if [azure][storage][container][name] == "insights-logs-auditlogs" {
+        elasticsearch {
+          hosts => ["https://es01:9200"]
+          user => "elastic"
+          password => "Aloulou556"
+          document_id => "%{[@metadata][_id]}"
+          index => "entraid-logs-%{+YYYY.MM.dd}"
+          ssl => true
+          cacert => "/usr/share/logstash/certs/ca/ca.crt"
+        }
+      }
+      if [azure][storage][container][name] == "insights-logs-riskyusers" {
         elasticsearch {
           hosts => ["https://es01:9200"]
           user => "elastic"
