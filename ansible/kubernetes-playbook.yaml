@@ -3,7 +3,7 @@
   hosts: localhost
   become: yes
   vars_files:
-    - ~/vault.yml
+    - /home/admala/vault.yml
   tasks:
     - name: Downloading the new configuration files
       shell: |
@@ -12,72 +12,72 @@
         unzip elk.zip
     - name: Downloading the new configuration files
       shell: |
-        rm -rf ~/mnt/data/elastalert-config/config/*
-        rm -rf ~/mnt/data/elastalert-config/rules/*
-        rm -rf ~/mnt/data/elastalert-config/custom_modules/*
-        cp -r ~/elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
-        cp -r ~/elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
-        cp -r ~/elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/    
+        rm -rf /home/admala/mnt/data/elastalert-config/config/*
+        rm -rf /home/admala/mnt/data/elastalert-config/rules/*
+        rm -rf /home/admala/mnt/data/elastalert-config/custom_modules/*
+        cp -r  /home/admala/elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
+        cp -r  /home/admala/elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
+        cp -r  /home/admala/elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/    
 
     - name: Configure NFS exports
       shell: |
         cat <<EOF > /etc/exports
-        ~/mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        ~/mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /home/admala/mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
         EOF
         exportfs -a
         systemctl restart nfs-kernel-server
     - name: Apply config maps
       shell: |
-        microk8s kubectl apply -f ~/elk-main/kubernetes/configMaps/env-configMap.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/configMaps/logstash-configMap.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/configMaps/kibana-configMap.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/env-configMap.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/filebeat-logs-configMap.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/filebeat-metrics-configMap.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/logstash-configMap.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/kibana-configMap.yaml
     
     - name: Apply persistent volumes
       shell: |
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/certs-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/elastalert2-modules-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/kibana-pv.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes/logstash-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/certs-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/elastalert2-config-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/elastalert2-modules-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/elastalert2-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/elastalert2-rules-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/elasticsearch-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/filebeat-logs-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/filebeat-metrics-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/fleet-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/kibana-pv.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/logstash-pv.yaml
     
     - name: Apply Persistent Volume Claims
       shell: |
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/certs-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/elastalert2-config-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/elastalert2-modules-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
-        microk8s kubectl apply -f ~/elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/certs-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/elastalert2-config-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/elastalert2-modules-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/elastalert2-rules-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/elastalert2-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/elasticsearch-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/filebeat-logs-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/filebeat-metrics-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
+        microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
     
     - name: Apply Deployments
       shell: |
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/fleet-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
-        microk8s kubectl rollout restart -f ~/elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/fleet-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
+        microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
