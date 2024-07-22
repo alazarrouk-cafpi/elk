@@ -21,7 +21,7 @@
 
     - name: Configure NFS exports
       shell: |
-        cat <<EOF > /home/admala/etc/exports
+        cat <<EOF > /etc/exports
         /mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
         /mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
         /mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
