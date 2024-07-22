@@ -15,9 +15,9 @@
         rm -rf /home/admala/mnt/data/elastalert-config/config/*
         rm -rf /home/admala/mnt/data/elastalert-config/rules/*
         rm -rf /home/admala/mnt/data/elastalert-config/custom_modules/*
-        cp -r  /home/admala/elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
-        cp -r  /home/admala/elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
-        cp -r  /home/admala/elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/    
+        cp -r  /home/admala/elk-main/elastalert/config/* /home/admala/mnt/data/elastalert-config/config/
+        cp -r  /home/admala/elk-main/elastalert/rules/* /home/admala/mnt/data/elastalert-config/rules/
+        cp -r  /home/admala/elk-main/elastalert/custom_modules/* /home/admala/mnt/data/elastalert-config/custom_modules/   
 
     - name: Configure NFS exports
       shell: |
