@@ -32,7 +32,7 @@ steps:
       VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
       COMMAND='
       cd /home/admala
-      ansible-playbook  --vault-password-file $VAULT_PASSWORD_FILE  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
+      ansible-playbook  --vault-password-file $VAULT_PASSWORD_FILE  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml -vvv
       '
 
       # Execute the command on the VM
