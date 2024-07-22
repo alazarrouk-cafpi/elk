@@ -19,6 +19,7 @@
         cp -r  /home/admala/elk-main/elastalert/rules/* /home/admala/mnt/data/elastalert-config/rules/
         cp -r  /home/admala/elk-main/elastalert/custom_modules/* /home/admala/mnt/data/elastalert-config/custom_modules/    
 
+
     - name: Configure NFS exports
       shell: |
         cat <<EOF > /home/admala/etc/exports
