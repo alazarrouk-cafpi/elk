@@ -92,3 +92,4 @@
     - name: Remove sensitive files
       shell: |
         rm -rf /home/admala/elk*
+      ignore_errors: yes
