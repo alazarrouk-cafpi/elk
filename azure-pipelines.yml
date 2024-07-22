@@ -31,6 +31,7 @@ steps:
       VM_NAME="masterk8s"
       VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
       COMMAND='
+      cd /home/admala
       curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
       unzip elk.zip
       ansible-playbook  --vault-password-file $VAULT_PASSWORD_FILE  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
