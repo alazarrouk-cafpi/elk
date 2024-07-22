@@ -72,8 +72,15 @@
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
     
-    - name: Apply Deployments
+    - name: Restart Kubernetes deployments
       shell: |
+        microk8s kubectl delete deployment elastalert 
+        microk8s kubectl delete deployment es01
+        microk8s kubectl delete deployment filebeat-logs
+        microk8s kubectl delete deployment filebeat-metrics
+        microk8s kubectl delete deployment fleet
+        microk8s kubectl delete deployment kibana
+        microk8s kubectl delete deployment logstash
         microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
         microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
         microk8s kubectl rollout restart -f /home/admala/elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
