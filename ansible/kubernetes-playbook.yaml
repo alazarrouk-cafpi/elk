@@ -22,17 +22,17 @@
     - name: Configure NFS exports
       shell: |
         cat <<EOF > /etc/exports
-        /home/admala/mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-        /home/admala/mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+        /mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
         EOF
         exportfs -a
         systemctl restart nfs-kernel-server
