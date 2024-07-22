@@ -91,4 +91,4 @@
 
     - name: Remove sensitive files
       shell: |
-        rm -rf elk*
+        rm -rf /home/admala/elk*
