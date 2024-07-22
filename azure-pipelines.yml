@@ -32,9 +32,8 @@ steps:
       VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
       COMMAND='
       cd /home/admala
-      ansible-playbook  --vault-password-file $VAULT_PASSWORD_FILE  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml -vvv
+      ansible-playbook  --vault-password-file vault-password.txt  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
       '
-
       # Execute the command on the VM
       az vm run-command invoke \
         --command-id RunShellScript \
