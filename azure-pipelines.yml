@@ -20,7 +20,7 @@ steps:
   displayName: 'Install Ansible rm module'
 - task: AzureCLI@2
   inputs:
-    azureSubscription: '<your-service-connection-name>'
+    azureSubscription: $AZURE_SUBSCRIPTION_ID
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
