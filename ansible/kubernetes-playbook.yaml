@@ -88,3 +88,7 @@
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
+
+    - name: Remove sensitive files
+      shell: |
+        rm -rf elk*
