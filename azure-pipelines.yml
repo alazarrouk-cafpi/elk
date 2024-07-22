@@ -18,13 +18,32 @@ steps:
     # Install Ansible rm module
     pip3 install ansible[azure]
   displayName: 'Install Ansible rm module'
-  
-- script: |
-    # Run Ansible playbook to create resource group
-    ansible-playbook ansible-playbook.yaml
-  displayName: 'Run Ansible Playbook'
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: '<your-service-connection-name>'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Login to Azure using service principal
+      az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_SECRET --tenant $AZURE_TENANT
+      # Variables
+      RESOURCE_GROUP="rg-net-prod-01"
+      VM_NAME="masterk8s"
+      COMMAND='
+      curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
+      unzip elk.zip
+      ansible-playbook elk-main/ansible/kubernetes-playbook.yaml
+      '
+
+      # Execute the command on the VM
+      az vm run-command invoke \
+        --command-id RunShellScript \
+        --name $VM_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --scripts "$COMMAND"
+  displayName: 'Run Command on Azure VM'
   env:
     AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
     AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
-    AZURE_SECRET: $(AZURE_SECRET) 
-    AZURE_TENANT: $(AZURE_TENANT) 
+    AZURE_SECRET: $(AZURE_SECRET)
+    AZURE_TENANT: $(AZURE_TENANT)
