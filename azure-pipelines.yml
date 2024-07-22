@@ -29,7 +29,7 @@ steps:
       # Variables
       RESOURCE_GROUP="rg-net-prod-01"
       VM_NAME="masterk8s"
-      VAULT_PASSWORD_FILE="/home/admalavault-password.txt"
+      VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
       COMMAND='
       curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
       unzip elk.zip
