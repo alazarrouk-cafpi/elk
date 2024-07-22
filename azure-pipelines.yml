@@ -32,7 +32,7 @@ steps:
       COMMAND='
       curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip 
       unzip elk.zip
-      ansible-playbook elk-main/ansible/kubernetes-playbook.yaml
+      ansible-playbook  --vault-password-file vault-password.txt  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
       '
 
       # Execute the command on the VM
