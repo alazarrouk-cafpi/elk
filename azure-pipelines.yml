@@ -10,6 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 steps:
 - task: AzureCLI@2
+  displayName: 'Run anisble playbook `Update Kubernetes cluster`'
   inputs:
     azureSubscription: 'azure-pipeline-sp'
     scriptType: 'bash'
@@ -34,7 +35,7 @@ steps:
         --name $VM_NAME \
         --resource-group $RESOURCE_GROUP \
         --scripts "$COMMAND"
-  displayName: 'Run Command on Azure VM'
+  
   env:
     AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
     AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
