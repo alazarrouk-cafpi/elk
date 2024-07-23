@@ -46,7 +46,7 @@
       become_user: admala
       environment:
         HOME: /home/admala
-        
+
     - name: Load nf_conntrack module
       modprobe:
         name: nf_conntrack
@@ -84,6 +84,7 @@
         chmod 777 /mnt/data/fleet-data
         chmod 777 /mnt/data/kibana-data
         chmod 777 /mnt/data/logstash-data
+      ignore_errors: yes
 
     - name: Configure NFS
       shell: |
@@ -113,7 +114,8 @@
             --docker-server=elkimages.azurecr.io \
             --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
             --docker-password=sQj8Q~vEyiZAsr4xk3b8RNHBA8MJvLkFXFaj~a7Q
-
+      ignore_errors: yes
+      
     - name: Copying elastalert configuration files to mounted folders
       shell: |
         cp -r elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
