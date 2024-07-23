@@ -27,6 +27,7 @@ steps:
 
       COMMAND='
       cd /home/admala
+      curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip
       ansible-playbook  --vault-password-file vault-password.txt  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
       '
       # Execute the command on the VM
