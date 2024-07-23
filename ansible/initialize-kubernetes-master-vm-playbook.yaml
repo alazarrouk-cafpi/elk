@@ -158,7 +158,7 @@
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
     
-    - name: Restart Kubernetes deployments
+    - name: Apply Kubernetes deployments
       shell: |
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elk-setup-deployment.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
