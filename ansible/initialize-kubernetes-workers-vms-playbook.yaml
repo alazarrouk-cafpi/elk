@@ -1,0 +1,35 @@
+---
+- name: Setup workers virtual machines
+  hosts: workers
+  become: yes
+  vars_files:
+    - /home/admala/vault.yml
+  tasks:
+    - name: Setting up dependencies
+      shell: |
+        apt-get update -y
+        apt install curl net-tools wget unzip openjdk-17-jdk -y
+        
+    - name: Setting up NFS client
+      shell: |
+        apt-get install nfs-common -y
+        systemctl enable nfs-common
+      ignore_errors: yes  
+      
+    - name: Setting kubernetes
+      shell: |
+        snap install microk8s --classic
+        usermod -a -G microk8s admala
+        newgrp microk8s
+        usermod -a -G microk8s admala
+        mkdir -p ~/.kube
+        chmod 0700 ~/.kube
+        chown -R admala ~/.kube
+        microk8s status --wait-ready
+        microk8s enable dns
+        microk8s enable storage
+        modprobe nf_conntrack
+        echo "net.netfilter.nf_conntrack_max=131072" | sudo tee -a /etc/sysctl.conf
+        sysctl -p
+        systemctl restart snap.microk8s.daemon-kubelite 
+      ignore_errors: yes

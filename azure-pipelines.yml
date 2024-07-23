@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 steps:
 - task: AzureCLI@2
-  displayName: 'Run anisble playbook `Update Kubernetes cluster`'
+  displayName: 'Run ansible playbook `Update Kubernetes cluster`'
   inputs:
     azureSubscription: 'azure-pipeline-sp'
     scriptType: 'bash'
