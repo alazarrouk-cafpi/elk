@@ -9,27 +9,21 @@ pr: none  # Disable PR triggers, can be adjusted as needed
 pool:
   vmImage: 'ubuntu-latest'
 steps:
-- script: |
-    # Install Ansible
-    pip3 install "ansible==2.9.17"
-  displayName: 'Install Ansible'
-  
-- script: |
-    # Install Ansible rm module
-    pip3 install ansible[azure]
-  displayName: 'Install Ansible rm module'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'azure-pipeline-sp'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
+
       # Login to Azure using service principal
       az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_SECRET --tenant $AZURE_TENANT
+
       # Variables
       RESOURCE_GROUP="rg-net-prod-01"
       VM_NAME="masterk8s"
       VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
+
       COMMAND='
       cd /home/admala
       ansible-playbook  --vault-password-file vault-password.txt  -i elk-main/ansible/hosts.ini  elk-main/ansible/kubernetes-playbook.yaml
