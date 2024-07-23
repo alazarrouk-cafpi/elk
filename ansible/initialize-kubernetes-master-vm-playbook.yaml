@@ -115,12 +115,12 @@
             --docker-username=df802705-25ee-4250-9860-0c01612bb0cd \
             --docker-password=sQj8Q~vEyiZAsr4xk3b8RNHBA8MJvLkFXFaj~a7Q
       ignore_errors: yes
-      
+
     - name: Copying elastalert configuration files to mounted folders
       shell: |
-        cp -r elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
-        cp -r elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
-        cp -r elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
+        cp -r /home/admala/elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
+        cp -r /home/admala/elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
+        cp -r /home/admala/elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
 
     - name: Apply config maps
       shell: |
