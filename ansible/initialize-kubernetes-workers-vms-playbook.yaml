@@ -40,18 +40,6 @@
       environment:
         HOME: /home/admala
 
-    - name: Enable DNS in MicroK8s
-      command: microk8s enable dns
-      become_user: admala
-      environment:
-        HOME: /home/admala
-
-    - name: Enable storage in MicroK8s
-      command: microk8s enable storage
-      become_user: admala
-      environment:
-        HOME: /home/admala
-
     - name: Install NFS common package
       apt:
         name: nfs-common
