@@ -32,7 +32,7 @@ class AppserviceCpuAverageRule(RuleType):
                 "bool": {
                     "must": [
                         {"query_string": {"query": "data.metricName: \"CpuPercentage\""}},
-                        {"range": {"data.time": {"gte": "now-31m", "lte": "now"}}}
+                        {"range": {"data.time": {"gte": "now-81m", "lte": "now"}}}
                     ]
                 }
             },
