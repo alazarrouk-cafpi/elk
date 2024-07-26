@@ -7,7 +7,7 @@ import yaml
 import json
 class AppserviceCpuMemoryAverageRule(RuleType):
     def __init__(self, *args):
-        super(AppserviceCpuAverageRule, self).__init__(*args)
+        super(AppserviceCpuMemoryAverageRule, self).__init__(*args)
         # Load configuration
         with open('config/config.yaml', 'r') as config_file:
             self.config = yaml.safe_load(config_file)

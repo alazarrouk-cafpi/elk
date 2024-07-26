@@ -1,4 +1,4 @@
-name: "Average Cpu utilization Rule"
+name: "Average Cpu and Memory utilization Rule"
 type: "custom_modules.appservice-cpu-memory-average-module.AppserviceCpuMemoryAverageRule"
 index: "appservices-metrics-*"
 http_post2_url:
