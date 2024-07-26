@@ -46,6 +46,12 @@ class AppserviceCpuAverageRule(RuleType):
                         "avg": {
                           "field": "data.total"
                         }
+                      },
+                      "resource_id": {
+                        "terms": {
+                            "field": "data.resourceId.keyword",
+                            "size": 1
+                        }
                       }
                     }
                 }
