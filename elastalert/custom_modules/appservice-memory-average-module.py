@@ -57,12 +57,16 @@ class AppserviceMemoryAverageRule(RuleType):
 
         # Process the results
         for bucket in result['aggregations']['appservice_plans']['buckets']:
+            appservicePlanId = ''
             appservicePlan = bucket['key']
+            for bk in bucket['resource_id']['buckets']: 
+              appservicePlanId=bk['key']
             averageMemory = bucket['average_memory']['value']
             # Example: Add a match if the count exceeds a certain threshold
             if averageMemory > 60:
                 match = {
                     "appservice_plan": appservicePlan,
+                    "appserviceplan_id": appservicePlanId,
                     "average_memory": averageMemory,
                     "date" : current_time
                 }

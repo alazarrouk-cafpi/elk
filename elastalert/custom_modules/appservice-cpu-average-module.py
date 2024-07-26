@@ -57,12 +57,16 @@ class AppserviceCpuAverageRule(RuleType):
 
         # Process the results
         for bucket in result['aggregations']['appservice_plans']['buckets']:
+            appservicePlanId = ''
             appservicePlan = bucket['key']
             averageCpu = bucket['average_cpu']['value']
+            for bk in bucket['resource_id']['buckets']: 
+              appservicePlanId=bk['key']
             # Example: Add a match if the count exceeds a certain threshold
             if averageCpu > 1:
                 match = {
                     "appservice_plan": appservicePlan,
+                    "appserviceplan_id": appservicePlanId,
                     "average_cpu": averageCpu,
                     "date" : current_time
                 }
