@@ -50,7 +50,7 @@ class AppserviceCpuAverageRule(RuleType):
                     }
                 }
             }
-        }
+        }	
 
         # Execute the query
         result = es.search(index="appservices-metrics-*", body=es_query)
