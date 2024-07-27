@@ -39,7 +39,7 @@ spec:
                   key: ELASTIC_PASSWORD
       containers:
         - name: fleet
-          image: elkimages.azurecr.io/fleet:latest
+          image: alazarrouk/fleet:latest
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
@@ -78,11 +78,6 @@ spec:
           volumeMounts:
             - mountPath: /elastic-agent-8.14.1-linux-x86_64/certs
               name: certs
-            #- mountPath:  /elastic-agent-8.14.1-linux-x86_64/data
-              #name: fleetdata
-
-      imagePullSecrets:
-          - name: elkimages-secret
       volumes:
         - name: certs
           nfs:
