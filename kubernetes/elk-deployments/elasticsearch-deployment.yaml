@@ -60,11 +60,6 @@ spec:
                 configMapKeyRef:
                   name: elk-config
                   key: ELASTIC_PASSWORD
-            - name: ES_MEM_LIMIT
-              valueFrom:
-                configMapKeyRef:
-                  name: elk-config
-                  key: ES_MEM_LIMIT
             - name: discovery.type
               value: single-node
             - name: ES_JAVA_OPTS
