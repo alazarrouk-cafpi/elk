@@ -2,10 +2,13 @@ name: "Average Cpu and Memory utilization Rule"
 type: "custom_modules.appservice-cpu-memory-average-module.AppserviceCpuMemoryAverageRule"
 index: "appservices-metrics-*"
 http_post2_url:
-  - "https://mocazi-api.azurewebsites.net/api/appservice-api?path=/create/alert"
+   "https://af-nodejs.azurewebsites.net/api/appservice-api?path=/create/alert"
 http_post2_payload:
+  alert_type: "{{alert_type}}"
   appservice_plan: "{{appservice_plan}}"
+  appserviceplan_id: "{{appserviceplan_id}}"
   average_cpu: "{{average_cpu}}"
+  average_memory: "{{average_memory}}"
   date: "{{date}}"
 alert:
 - "debug"

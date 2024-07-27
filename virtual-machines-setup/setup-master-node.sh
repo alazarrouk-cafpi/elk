@@ -17,8 +17,6 @@ sudo mkdir -p /mnt/data/filebeatmetrics-data
 sudo mkdir -p /mnt/data/fleet-data
 sudo mkdir -p /mnt/data/kibana-data
 sudo mkdir -p /mnt/data/logstash-data
-
-
 sudo chmod 777 /mnt/data/certs
 sudo chmod 777 /mnt/data/elastalert-config/
 sudo chmod 777 /mnt/data/elastalert-data
@@ -32,7 +30,7 @@ sudo chmod 777 /mnt/data/logstash-data
 #---Nfs configuration
 sudo apt-get update
 sudo apt-get install nfs-kernel-server -y
-sudo apt-get enable nfs-kernel-server -y
+sudo systemctl enable nfs-kernel-server -y
 
 lines_to_add=(
 "/mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)"

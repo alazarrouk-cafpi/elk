@@ -1,4 +1,3 @@
-# elastic-setup.yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -35,24 +34,19 @@ spec:
                   key: STACK_VERSION
           args:
             - |
-              echo "package installation"
+              echo "#package installation"
               curl -L -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              if [ x${ELASTIC_PASSWORD} == x ]; then
-                echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
-                exit 1;
-              elif [ x${KIBANA_PASSWORD} == x ]; then
-                echo "Set the KIBANA_PASSWORD environment variable in the .env file";
-                exit 1;
-              fi;
+
               if [ ! -f config/certs/ca.zip ]; then
-                echo "Creating CA";
+                echo "#Creating CA";
                 bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
                 unzip config/certs/ca.zip -d config/certs;
               fi;
+
               if [ ! -f config/certs/certs.zip ]; then
-                echo "Creating certs";
+                echo "#Creating certs";
                 echo -ne \
                 "instances:\n"\
                 "  - name: es01\n"\
@@ -105,25 +99,28 @@ spec:
                 bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
                 unzip config/certs/certs.zip -d config/certs;
               fi;
-              echo "Setting file permissions"
+
+
+              echo "#Setting file permissions"
               chown -R root:root config/certs;
               find . -type d -exec chmod 777 \{\} \;;
               find . -type f -exec chmod 777 \{\} \;;
               
-              echo "Waiting for Elasticsearch availability";
+              echo "#Waiting for Elasticsearch availability";
               until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; 
                 do sleep 30; 
               done;
 
-              echo "Setting kibana_system password";
+              echo "#Setting kibana_system password";
               until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
-              echo "Waiting for kibana availability"; 
+              
+              echo "#Waiting for kibana availability"; 
               until [ "$(curl -s -k --user elastic:Aloulou556 http://kibana:5601/api/status | jq -r '.status.overall.level')" = "available" ]; do
                   echo "Waiting for Kibana to be available..."
                   sleep 10
               done
 
-              echo "Creating fleet server";
+              echo "#Creating fleet server";
               curl -u elastic:Aloulou556 \
               --request POST \
               --url http://kibana:5601/api/fleet/fleet_server_hosts \
@@ -140,14 +137,14 @@ spec:
 
 
 
-              echo "Configuring default fleet server output to elasticsearch";
+              echo "#Configuring default fleet server output to elasticsearch";
               curl -u elastic:Aloulou556 --request PUT \
               --url http://kibana:5601/api/fleet/outputs/fleet-default-output \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
               --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.15:30000"]}'
 
-              echo "Configuring fleet server output to elasticsearch";
+              echo "#Configuring fleet server output to elasticsearch";
               curl -u elastic:Aloulou556 --request POST \
               --url http://kibana:5601/api/fleet/outputs \
               --header 'content-type: application/json' \
@@ -155,14 +152,14 @@ spec:
               --data '{"name": "default","type": "elasticsearch","is_default": true,"is_default_monitoring": true,"hosts": ["https://10.53.2.15:30000"]}'
 
 
-              echo "Creating windows agent policy"
+              echo "#Creating windows agent policy"
               curl -u elastic:Aloulou556 --request POST \
               --url http://kibana:5601/api/fleet/agent_policies?sys_monitoring=true \
               --header 'content-type: application/json' \
               --header 'kbn-xsrf: true' \
               --data '{"id":"windows-policy","name":"Windows agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}'
               
-              echo "Creating linux agent policy"
+              echo "#Creating linux agent policy"
               curl -u elastic:Aloulou556 --request POST \
               --url http://kibana:5601/api/fleet/agent_policies?sys_monitoring=true \
               --header 'content-type: application/json' \
@@ -170,14 +167,14 @@ spec:
               --data '{"id":"linux-policy","name":"Linux agent policy","namespace":"default","monitoring_enabled":["logs","metrics"]}' 
 
 
-              echo "Assigning windows integration to the windows agent policy" 
+              echo "#Assigning windows integration to the windows agent policy" 
               curl -k -s -u elastic:Aloulou556 \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \
               -d '{"name": "windows-sysmonlogs-integration", "namespace": "default", "policy_id":"windows-policy", "package":{"name": "windows", "version": "1.45.1"}}'
               
 
-              echo "Assigning sysmon integration to the linux agent policy" 
+              echo "#Assigning sysmon integration to the linux agent policy" 
               curl -k -s -u elastic:Aloulou556 \
               -XPOST -H "kbn-xsrf: true" -H "Content-type: application/json" \
               "http://kibana:5601/api/fleet/package_policies" \

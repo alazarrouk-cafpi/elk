@@ -144,9 +144,7 @@ data:
                       
                     # Metric of app service
                     elsif resource_type == "MICROSOFT.WEB"
-                      puts "------------------- new record-----------------"
                       appservice_plan=event.get("data")["resourceId"].match(/SERVERFARMS\/([^\/]+)/)[1]
-                      puts "appservice plan : #{appservice_plan}"
                       metric=event.get("data")["metricName"]
                       puts "metric name : #{metric}"
                       if metric!="CpuPercentage" && metric!="MemoryPercentage"
