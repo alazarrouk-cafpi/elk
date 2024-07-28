@@ -33,8 +33,8 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              until [ "$(curl -s -o /dev/null -w "%{http_code}" http://logstash:9600/_node/stats/pipelines)" = "200" ]; do
-                  echo "Logstash is not fully initialized yet. Waiting..."
+              until [ "$(curl -s -o /dev/null -w "%{http_code}" http://fleet:8220/api/fleet/agents/_bulk)" = "200" ]; do
+                  echo "fleet is not fully initialized yet. Waiting..."
                   sleep 5
               done
           env:
