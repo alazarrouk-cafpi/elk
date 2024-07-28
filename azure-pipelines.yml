@@ -16,10 +16,6 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-
-      # Login to Azure using service principal
-      az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_SECRET --tenant $AZURE_TENANT
-
       # Variables
       RESOURCE_GROUP="RG-PFE"
       VM_NAME="Elasticsearch-Ala"
