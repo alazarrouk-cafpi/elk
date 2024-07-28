@@ -33,9 +33,11 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; 
-                do sleep 30; 
-              done;
+              echo "#Waiting for kibana availability"; 
+              until [ "$(curl -s -k --user elastic:Aloulou556 http://kibana:5601/api/status | jq -r '.status.overall.level')" = "available" ]; do
+                  echo "Waiting for Kibana to be available..."
+                  sleep 10
+              done
              
           env:
             - name: ELASTIC_PASSWORD
