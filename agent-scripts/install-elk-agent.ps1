@@ -35,8 +35,8 @@ Write-Output "--Getting enrollement token"
 $enrollementToken = $response.items | Where-Object { $_.policy_id -eq "windows-policy" } | Select-Object -ExpandProperty api_key
 Write-Output $enrollementToken
 
-Write-Output "Downloading elastic agent .."
-Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.14.2-windows-x86_64.zip -OutFile elastic-agent-8.14.2-windows-x86_64.zip
+#Write-Output "Downloading elastic agent .."
+#Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.14.2-windows-x86_64.zip -OutFile elastic-agent-8.14.2-windows-x86_64.zip
 Write-Output "Expanding archive .."
 Expand-Archive .\elastic-agent-8.14.2-windows-x86_64.zip -DestinationPath .
 
