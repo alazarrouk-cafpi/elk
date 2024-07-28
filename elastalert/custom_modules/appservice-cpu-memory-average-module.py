@@ -125,7 +125,6 @@ class AppserviceCpuMemoryAverageRule(RuleType):
                 
                 # Send email alert for the match
                 # self.email_alerter.alert([match])
-            print(appservicePlanId)
             self.send_http_post(match)
 
     def send_http_post(self, match):

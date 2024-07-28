@@ -114,6 +114,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
         result_memory= es.search(index=".ds-metrics-system.memory-default-*", body=es_query_memory)
         cpu_threshold=8 
         memory_threshold=60
+        print(result_cpu)
         # Process the results
         for bucket in result_cpu['aggregations']['virtualmachines']['buckets']:
             subscriptionId=''
@@ -122,7 +123,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
             averageMemory = 0
             for bucket_mem in result_memory['aggregations']['virtualmachines']['buckets']:
                 if bucket_mem['key'] == virtualMachineName :
-                    averageMemory = bucket_mem['memory_avg']['average_memory']['value'] 
+                    averageMemory = round((bucket_mem['memory_avg']['average_memory']['value'])*100, 2)
                     break
             
             for bk in bucket['subscription_id']['buckets']: 
@@ -158,7 +159,6 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                 
                 # Send email alert for the match
                 # self.email_alerter.alert([match])
-            print(appservicePlanId)
             self.send_http_post(match)
 
     def send_http_post(self, match):
