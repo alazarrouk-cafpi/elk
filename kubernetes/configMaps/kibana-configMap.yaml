@@ -32,3 +32,6 @@ data:
           - name: fleet_server-1
             package:
               name: fleet_server
+          - name: system
+            package:
+              name: system
