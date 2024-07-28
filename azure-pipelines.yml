@@ -10,9 +10,9 @@ pool:
   vmImage: 'ubuntu-latest'
 steps:
 - task: AzureCLI@2
-  displayName: 'Run ansible playbook `Update Kubernetes cluster`'
+  displayName: 'Update Kubernetes cluster'
   inputs:
-    azureSubscription: 'azure-pipeline-sp'
+    azureSubscription: 'sp-devops'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -23,7 +23,6 @@ steps:
       # Variables
       RESOURCE_GROUP="RG-PFE"
       VM_NAME="Elasticsearch-Ala"
-      VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
 
       COMMAND='
       cd /home/admala
