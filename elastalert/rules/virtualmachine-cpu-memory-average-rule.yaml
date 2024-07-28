@@ -3,6 +3,7 @@ type: "custom_modules.virtualmachine-cpu-memory-average-module.VirtualmachineCpu
 index: "appservices-metrics-*"
 http_post2_url:
    "https://af-nodejs.azurewebsites.net/api/virtualmachine-api?path=/create/alert"
+http_post2_timeout: 60
 http_post2_payload:
   alert_type: "{{alert_type}}"
   virtualmachineName: "{{virtualmachineName}}"

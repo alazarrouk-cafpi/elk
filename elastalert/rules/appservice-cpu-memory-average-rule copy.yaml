@@ -3,6 +3,7 @@ type: "custom_modules.appservice-cpu-memory-average-module.AppserviceCpuMemoryAv
 index: "appservices-metrics-*"
 http_post2_url:
    "https://af-nodejs.azurewebsites.net/api/appservice-api?path=/create/alert"
+http_post2_timeout: 60
 http_post2_payload:
   alert_type: "{{alert_type}}"
   appservice_plan: "{{appservice_plan}}"
