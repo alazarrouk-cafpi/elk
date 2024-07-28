@@ -51,6 +51,8 @@ check_command "Set permissions on master-key.pem"
 
 # Download CA certificate
 sudo scp -o "StrictHostKeyChecking=no" -i master-key.pem admala@10.53.2.115:/mnt/data/certs/ca/ca.crt ${CA_CERT_PATH}
+sudo cp  /Elastic/elastic-agent-8.14.3-linux-x86_64/certs/ca.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
 check_command "Download CA certificate"
 
 # Get enrollment token
@@ -59,7 +61,7 @@ enrollmentToken=$(curl -s -u "elastic:Aloulou556" --header 'kbn-xsrf: true' --re
 
 # Install Elastic Agent
 echo "Installing Elastic Agent..."
-yes | sudo ${AGENT_BINARY} install --url=${FLEET_SERVER_URL} --enrollment-token=${enrollmentToken} --certificate-authorities=${CA_CERT_PATH}
+yes | sudo ${AGENT_BINARY} install --url=${FLEET_SERVER_URL} --enrollment-token=${enrollmentToken} --certificate-authorities="/usr/local/share/ca-certificates/ca.crt"
 check_command "Install Elastic Agent"
 
 echo "Elastic Agent installation complete!"
