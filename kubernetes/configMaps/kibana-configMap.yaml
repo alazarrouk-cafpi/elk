@@ -13,6 +13,13 @@ data:
     server.shutdownTimeout: "5s"
     elasticsearch.hosts: [ "https://es01:9200" ]
     monitoring.ui.container.elasticsearch.enabled: true
+    xpack.fleet.outputs:
+      - name: default
+        type: elasticsearch
+        is_default: true
+        is_default_monitoring: true
+        hosts:
+          - "https://10.53.2.15:30000"
     xpack.fleet.packages:
       - name: fleet_server
         version: latest

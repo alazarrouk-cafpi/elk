@@ -1,23 +1,65 @@
+#!/bin/bash
+
+# Set variables
+ELASTIC_AGENT_VERSION="8.14.3"
+ELASTIC_AGENT_URL="https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-${ELASTIC_AGENT_VERSION}-linux-x86_64.tar.gz"
+ELASTIC_AGENT_DIR="/Elastic/elastic-agent-${ELASTIC_AGENT_VERSION}-linux-x86_64"
+CERTS_DIR="${ELASTIC_AGENT_DIR}/certs"
+FLEET_SERVER_URL="https://10.53.2.15:30002"
+ENROLLMENT_API_KEYS_URL="http://10.53.2.15:30001/api/fleet/enrollment_api_keys"
+CA_CERT_URL="https://sapfe.blob.core.windows.net/elk-files/ssh-keys/master-key.pem?sp=r&st=2024-07-27T21:03:24Z&se=2024-10-18T05:03:24Z&sv=2022-11-02&sr=b&sig=R1KjcDyRtbZcb8KerABrY0wqfUyVPXDmYHbcl9%2BPspg%3D"
+MASTER_KEY_PATH="${CERTS_DIR}/master-key.pem"
+CA_CERT_PATH="${CERTS_DIR}/ca.crt"
+AGENT_BINARY="${ELASTIC_AGENT_DIR}/elastic-agent"
+
+# Function to check if the command succeeded
+check_command() {
+    if [ $? -ne 0 ]; then
+        echo "Error: $1 failed"
+        exit 1
+    fi
+}
+
+# Update system and install Sysmon for Linux
+echo "Installing Sysmon for Linux..."
 wget -q https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
+check_command "Install Sysmon package"
 sudo apt-get update
 sudo apt-get install -y sysmonforlinux
+check_command "Install Sysmon for Linux"
 sudo sysmon -i
+check_command "Configure Sysmon"
 
-cd /
-sudo mkdir Elastic 
-cd Elastic 
-sudo  curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.14.3-linux-x86_64.tar.gz
-sudo tar xzvf elastic-agent-8.14.3-linux-x86_64.tar.gz
-cd elastic-agent-8.14.3-linux-x86_64
-sudo mkdir certs
-cd certs
-sudo curl -o master.pem "https://sapfe01.blob.core.windows.net/elk-files/ssh-keys/master.pem?sp=rw&st=2024-07-14T16:28:08Z&se=2024-10-12T00:28:08Z&sv=2022-11-02&sr=b&sig=%2FEhIvLTBsu3zu9fOZvBQPB%2BU0K6oDdsv03u9v6vxvV8%3D"
-sudo chmod 600 master.pem
-sudo scp -o "StrictHostKeyChecking=no" -i "master.pem" admala@10.53.2.115:/mnt/data/certs/ca/ca.crt .
-cd ..
-credentials="elastic:Aloulou556"
-url="http://135.236.136.224:30001/api/fleet/enrollment_api_keys"
-response=$(curl -s -u "$credentials" --header 'kbn-xsrf: true' --request GET "$url")
-enrollmentToken=$(echo "$response" | grep -oP '"list":\[\{"id":"[^"]*","active":true,"api_key_id":"[^"]*","api_key":"\K[^"]+' | sed 's/","name.*//')
-sudo ./elastic-agent install --url=https://135.236.136.224:30002 --enrollment-token=$enrollmentToken --certificate-authorities="/Elastic/elastic-agent-8.14.3-linux-x86_64/certs/ca.crt"
+# Create directory for Elastic Agent and download it
+echo "Setting up Elastic Agent..."
+sudo mkdir -p /Elastic
+cd /Elastic
+sudo curl -L -O ${ELASTIC_AGENT_URL}
+check_command "Download Elastic Agent"
+sudo tar xzvf ${ELASTIC_AGENT_URL##*/}
+check_command "Extract Elastic Agent"
+
+# Setup certificates
+echo "Setting up certificates..."
+sudo mkdir -p ${CERTS_DIR}
+cd ${CERTS_DIR}
+sudo curl -o master-key.pem ${CA_CERT_URL}
+check_command "Download master-key.pem"
+sudo chmod 600 master-key.pem
+check_command "Set permissions on master-key.pem"
+
+# Download CA certificate
+sudo scp -o "StrictHostKeyChecking=no" -i master-key.pem admala@10.53.2.115:/mnt/data/certs/ca/ca.crt ${CA_CERT_PATH}
+check_command "Download CA certificate"
+
+# Get enrollment token
+echo "Fetching enrollment token..."
+enrollmentToken=$(curl -s -u "elastic:Aloulou556" --header 'kbn-xsrf: true' --request GET "http://10.53.2.15:30001/api/fleet/enrollment_api_keys" | grep -oP '"list":\[\{"id":"[^"]*","active":true,"api_key_id":"[^"]*","api_key":"\K[^"]+' | sed 's/","name.*//')
+
+# Install Elastic Agent
+echo "Installing Elastic Agent..."
+yes | sudo ${AGENT_BINARY} install --url=${FLEET_SERVER_URL} --enrollment-token=${enrollmentToken} --certificate-authorities=${CA_CERT_PATH}
+check_command "Install Elastic Agent"
+
+echo "Elastic Agent installation complete!"

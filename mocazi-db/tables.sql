@@ -88,7 +88,7 @@ CREATE TABLE [dbo].[alert] (
     [date]                DATETIME      NULL,
     [value]               VARCHAR (255) NULL,
     [azure_resource_name] VARCHAR (255) NULL,
-    [state]               VARCHAR (50)  NOT NULL
+    [state]               VARCHAR (50)  NOT NULL,
     [appserviceplan_id]   VARCHAR (MAX) NULL,
     [virtualmachine_id]   VARCHAR (MAX) NULL,
     [optimization_id]     INT           NULL,
