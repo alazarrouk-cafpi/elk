@@ -33,10 +33,10 @@ spec:
               wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
               chmod +x jq
               mv jq /bin/jq
-              until [ "$(curl -s -o /dev/null -w "%{http_code}" http://fleet:8220/api/fleet/agents/_bulk)" = "200" ]; do
-                  echo "fleet is not fully initialized yet. Waiting..."
-                  sleep 5
-              done
+              until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; 
+                do sleep 30; 
+              done;
+             
           env:
             - name: ELASTIC_PASSWORD
               valueFrom:
