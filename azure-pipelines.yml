@@ -21,15 +21,16 @@ steps:
       az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_SECRET --tenant $AZURE_TENANT
 
       # Variables
-      RESOURCE_GROUP="rg-net-prod-01"
-      VM_NAME="masterk8s"
+      RESOURCE_GROUP="RG-PFE"
+      VM_NAME="Elasticsearch-Ala"
       VAULT_PASSWORD_FILE="/home/admala/vault-password.txt"
 
       COMMAND='
       cd /home/admala
       curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip
       unzip elk.zip
-      ansible-playbook  --vault-password-file vault-password.txt  -i elk-main/ansible/hosts.ini  elk-main/ansible/update-kubernetes-playbook.yaml
+      sudo chmod 777 elk-main/pipelines-scripts/update-elk.sh  
+      sudo bash ./elk-main/pipelines-scripts/update-elk.sh
       '
       # Execute the command on the VM
       az vm run-command invoke \
