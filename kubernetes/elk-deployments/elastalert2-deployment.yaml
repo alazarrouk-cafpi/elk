@@ -38,6 +38,10 @@ spec:
                   echo "Waiting for Kibana to be available..."
                   sleep 10
               done
+              until [ "$(curl -s -u elastic:Aloulou556 --request GET --url http://kibana:5601/api/fleet/agents --header 'kbn-xsrf: true' | jq -r '.items[].components[] | select(.type == "fleet-server") | select(.status == "HEALTHY") | .status')" = "HEALTHY" ]; do
+                  echo "Waiting for fleet to be available..."
+                  sleep 10
+              done
              
           env:
             - name: ELASTIC_PASSWORD
