@@ -55,6 +55,11 @@ spec:
               SERVICE_TOKEN=$(curl -X POST --cacert certs/ca/ca.crt --user elastic:Aloulou556 "https://es01:9200/_security/service/elastic/fleet-server/credential/token?pretty" | jq -r '.token.value')
               echo $SERVICE_TOKEN
               curl --cacert certs/ca/ca.crt -H "Authorization: Bearer $SERVICE_TOKEN" https://es01:9200/_security/_authenticate
+              sudo cp  /elastic-agent-8.14.1-linux-x86_64/certs/ca/ca.crt /usr/local/share/ca-certificates/
+              sudo cp  /elastic-agent-8.14.1-linux-x86_64/certs/es01/es01.crt /usr/local/share/ca-certificates/
+              sudo cp  /elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.crt /usr/local/share/ca-certificates/
+              sudo cp  /elastic-agent-8.14.1-linux-x86_64/certs/fleet/fleet.crt /usr/local/share/ca-certificates/
+              sudo update-ca-certificates
               echo 'y' | ./elastic-agent install \
               --url=https://fleet:8220 \
               --fleet-server-es=https://es01:9200 \
