@@ -35,3 +35,13 @@ data:
           - name: system
             package:
               name: system
+      - name: Test  policy
+        id: test-policy
+        namespace: default
+        package_policies:
+          - name: window
+            package:
+              name: windows
+          - name: system
+            package:
+              name: system
