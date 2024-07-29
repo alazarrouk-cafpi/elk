@@ -37,6 +37,7 @@
         EOF
         exportfs -a
         systemctl restart nfs-kernel-server
+
     - name: Apply config maps
       shell: |
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/env-configMap.yaml

@@ -84,8 +84,8 @@ class AppserviceCpuMemoryAverageRule(RuleType):
 
         # Execute the query
         result = es.search(index="appservices-metrics-*", body=es_query)
-        cpu_threshold=1 
-        memory_threshold=60
+        cpu_threshold=1
+        memory_threshold=80
         # Process the results
         for bucket in result['aggregations']['appservice_plans']['buckets']:
             appservicePlanId = ''
