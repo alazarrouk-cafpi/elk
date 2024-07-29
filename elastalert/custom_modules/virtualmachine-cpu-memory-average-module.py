@@ -62,6 +62,12 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                                 "field": "cloud.account.id",
                                 "size": 1
                             }
+                        },
+                        "username": {
+                            "terms": {
+                                "field": "user.name",
+                                "size": 1
+                            }
                         }
                     }
                 }
