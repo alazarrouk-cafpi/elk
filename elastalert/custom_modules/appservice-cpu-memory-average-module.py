@@ -111,6 +111,7 @@ class AppserviceCpuMemoryAverageRule(RuleType):
                         "appservice_plan": appservicePlan,
                         "appserviceplan_id": appservicePlanId,
                         "average_cpu": averageCpu,
+                        "average_memory": 0,
                         "date" : current_time
                     }
                 if averageMemory > memory_threshold:
@@ -118,6 +119,7 @@ class AppserviceCpuMemoryAverageRule(RuleType):
                         "alert_type": 'memory',
                         "appservice_plan": appservicePlan,
                         "appserviceplan_id": appservicePlanId,
+                        "average_cpu": 0,
                         "average_memory": averageMemory,
                         "date" : current_time
                     }
