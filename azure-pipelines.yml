@@ -5,24 +5,47 @@ pr: none  # Disable PR triggers, can be adjusted as needed
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: AzureCLI@2
-  displayName: 'Run Commands on Azure VM'
-  inputs:
-    azureSubscription: 'sp-devops'  # Ensure this matches the name of your service connection
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Variables
-      RESOURCE_GROUP="RG-PFE"
-      VM_NAME="Elasticsearch-Ala"
+jobs:
+- job: RunCommandsOnVM
+  steps:
+  - task: AzureCLI@2
+    displayName: 'Run Commands on Azure VM'
+    inputs:
+      azureSubscription: 'sp-devops'  # Ensure this matches the name of your service connection
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # Variables
+        RESOURCE_GROUP="RG-PFE"
+        VM_NAME="Elasticsearch-Ala"
 
-      # Execute commands on the VM
-      az vm run-command invoke \
-        --resource-group $RESOURCE_GROUP \
-        --name $VM_NAME \
-        --command-id RunShellScript \
-        --scripts '
+        # Function to execute run-command with retry logic
+        function run_command {
+          local attempt=0
+          local max_attempts=5
+          local sleep_interval=30
+          local command="$1"
+
+          while (( attempt < max_attempts )); do
+            az vm run-command invoke \
+              --resource-group $RESOURCE_GROUP \
+              --name $VM_NAME \
+              --command-id RunShellScript \
+              --scripts "$command" && break
+
+            echo "Run command failed. Attempt $((attempt + 1)) of $max_attempts. Retrying in $sleep_interval seconds..."
+            ((attempt++))
+            sleep $sleep_interval
+          done
+
+          if (( attempt == max_attempts )); then
+            echo "Run command failed after $max_attempts attempts."
+            exit 1
+          fi
+        }
+
+        # Define the script to run
+        SCRIPT='
         cd /home/admala
         rm -rf elk*
         curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip
@@ -66,9 +89,6 @@ steps:
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
         microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
         '
-  
-  env:
-    AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
-    AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
-    AZURE_SECRET: $(AZURE_SECRET)
-    AZURE_TENANT: $(AZURE_TENANT)
+
+        # Execute the script with retry logic
+        run_command "$SCRIPT"
