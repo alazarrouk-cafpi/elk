@@ -12,19 +12,23 @@ steps:
       # Variables
       RESOURCE_GROUP="RG-PFE"
       VM_NAME="Elasticsearch-Ala"
-      
+
       # Define the script to run on VM
       SCRIPT='#!/bin/bash
-      echo "Starting script execution"
-      cd /home/admala
-      sudo bash update-elk.sh
+      sudo bash /home/admala/re-install.sh
       exit 0'
 
-      # Execute the script on the VM
+      # Print the script for debugging
+      echo "Executing script on VM:"
+
+      # Execute the script on the VM without waiting for completion
       az vm run-command invoke \
         --resource-group $RESOURCE_GROUP \
         --name $VM_NAME \
         --command-id RunShellScript \
-        --scripts "$SCRIPT"
+        --scripts "$SCRIPT" \
+        --no-wait \
+        --verbose \
+        --query "value[0].message" \
         
-      echo "All commands executed successfully."
+      echo "Command has been submitted. The operation is running asynchronously."
