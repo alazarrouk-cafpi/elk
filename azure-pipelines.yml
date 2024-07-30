@@ -15,6 +15,9 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
+        # Exit immediately if a command exits with a non-zero status
+        set -e
+
         # Variables
         RESOURCE_GROUP="RG-PFE"
         VM_NAME="Elasticsearch-Ala"
@@ -27,21 +30,25 @@ jobs:
           local command="$1"
 
           while (( attempt < max_attempts )); do
+            echo "Executing command..."
             az vm run-command invoke \
               --resource-group $RESOURCE_GROUP \
               --name $VM_NAME \
               --command-id RunShellScript \
-              --scripts "$command" && break
+              --scripts "$command"
 
-            echo "Run command failed. Attempt $((attempt + 1)) of $max_attempts. Retrying in $sleep_interval seconds..."
-            ((attempt++))
-            sleep $sleep_interval
+            if [[ $? -eq 0 ]]; then
+              echo "Command executed successfully."
+              return 0
+            else
+              echo "Run command failed. Attempt $((attempt + 1)) of $max_attempts. Retrying in $sleep_interval seconds..."
+              ((attempt++))
+              sleep $sleep_interval
+            fi
           done
 
-          if (( attempt == max_attempts )); then
-            echo "Run command failed after $max_attempts attempts."
-            exit 1
-          fi
+          echo "Run command failed after $max_attempts attempts."
+          exit 1
         }
 
         # Define the script to run
@@ -92,3 +99,5 @@ jobs:
 
         # Execute the script with retry logic
         run_command "$SCRIPT"
+
+        echo "All commands executed successfully."
