@@ -1,4 +1,3 @@
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -13,66 +12,23 @@ steps:
       # Variables
       RESOURCE_GROUP="RG-PFE"
       VM_NAME="Elasticsearch-Ala"
-      
+
       # Define the script to run on VM
       SCRIPT='#!/bin/bash
-      echo "Starting script execution"
-      cd /home/admala
-      rm -rf elk*
-      curl -L -o elk.zip https://github.com/alazarrouk-cafpi/elk/archive/refs/heads/main.zip
-      unzip elk.zip
-      rm -rf /mnt/data/elastalert-config/config/*
-      rm -rf /mnt/data/elastalert-config/rules/*
-      rm -rf /mnt/data/elastalert-config/custom_modules/*
-      cp -r /home/admala/elk-main/elastalert/config/* /mnt/data/elastalert-config/config/
-      cp -r /home/admala/elk-main/elastalert/rules/* /mnt/data/elastalert-config/rules/
-      cp -r /home/admala/elk-main/elastalert/custom_modules/* /mnt/data/elastalert-config/custom_modules/
-      cat <<EOF > /etc/exports
-      /mnt/data/certs 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/fleet-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/logstash-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/kibana-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/es-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/elastalert-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/elastalert-config/config 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/elastalert-config/rules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/elastalert-config/custom_modules 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/filebeatlogs-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      /mnt/data/filebeatmetrics-data 10.53.2.0/24(rw,sync,no_root_squash,no_subtree_check)
-      EOF
-      exportfs -a
-      systemctl restart nfs-kernel-server
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/configMaps/
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes/
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/persistent-volumes-claims/
-      microk8s kubectl delete deployment elastalert 
-      microk8s kubectl delete deployment es01
-      microk8s kubectl delete deployment filebeat-logs
-      microk8s kubectl delete deployment filebeat-metrics
-      microk8s kubectl delete deployment fleet
-      microk8s kubectl delete deployment kibana
-      microk8s kubectl delete deployment logstash
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/logstash-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/kibana-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/fleet-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-logs-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/filebeat-metrics-deployment.yaml
-      microk8s kubectl apply -f /home/admala/elk-main/kubernetes/elk-deployments/elastalert2-deployment.yaml
-      echo "Script execution completed"
+      sudo bash /home/admala/re-install.sh
       exit 0'
 
-      # Execute the script on the VM
+      # Print the script for debugging
+      echo "Executing script on VM:"
+
+      # Execute the script on the VM without waiting for completion
       az vm run-command invoke \
         --resource-group $RESOURCE_GROUP \
         --name $VM_NAME \
         --command-id RunShellScript \
-        --scripts "$SCRIPT"
+        --scripts "$SCRIPT" \
+        --no-wait \
+        --verbose \
+        --query "value[0].message" \
         
-      echo "All commands executed successfully."
-  
-  env:
-    AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
-    AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
-    AZURE_SECRET: $(AZURE_SECRET)
-    AZURE_TENANT: $(AZURE_TENANT)
+      echo "Command has been submitted. The operation is running asynchronously."
