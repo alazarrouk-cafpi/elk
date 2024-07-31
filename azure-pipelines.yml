@@ -3,7 +3,7 @@ pool:
 
 steps:
 - task: AzureCLI@2
-  displayName: 'Run Commands on Azure VM'
+  displayName: 'Update ELK cluster'
   inputs:
     azureSubscription: 'sp-devops'
     scriptType: 'bash'
