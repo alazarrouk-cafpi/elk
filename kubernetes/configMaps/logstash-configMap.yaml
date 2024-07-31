@@ -25,10 +25,7 @@ data:
         ruby {
           code => '
             begin
-              # Directly access the properties hash if it's already a JSON object
               properties_hash = event.get("data")["properties"]
-              
-              # Check if `properties_hash` is a Hash, which means it's already parsed
               if properties_hash.is_a?(Hash)
                 check = properties_hash["CsHost"].include?("scm")
                 if !check
