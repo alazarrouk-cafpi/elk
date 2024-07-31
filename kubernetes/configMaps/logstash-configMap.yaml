@@ -88,7 +88,7 @@ data:
           user => "elastic"
           password => "Aloulou556"
           document_id => "%{[@metadata][_id]}"
-          index => "entraid-logs-%{+YYYY.MM.dd}"
+          index => "entraid-auditlogs-logs-%{+YYYY.MM.dd}"
           ssl => true
           cacert => "/usr/share/logstash/certs/ca/ca.crt"
         }
@@ -99,7 +99,7 @@ data:
           user => "elastic"
           password => "Aloulou556"
           document_id => "%{[@metadata][_id]}"
-          index => "entraid-logs-%{+YYYY.MM.dd}"
+          index => "entraid-eiskyusers-logs-%{+YYYY.MM.dd}"
           ssl => true
           cacert => "/usr/share/logstash/certs/ca/ca.crt"
         }
