@@ -25,22 +25,20 @@ data:
         ruby {
           code => '
             begin
-              dataparsed=""
               properties_hash = event.get("data")["properties"]
               if properties_hash.is_a?(Hash)
-                event.set("data.properties", properties_hash.to_json)
-                dataparsed=properties_hash
-                properties_hash = event.get("data")["properties"]
-              else 
-                dataparsed=JSON.parse(properties_hash)
+                event.set("data.properties", properties_hash)
+              else
+                properties_hash = JSON.parse(properties_hash)
+                event.set("data.properties", properties_hash)
               end
-              check=dataparsed["CsHost"].include?("scm")
+              check = properties_hash["CsHost"].include?("scm")
               if !check
-                cip=dataparsed["CIp"].include?("127.0.0.1")
+                cip = properties_hash["CIp"].include?("127.0.0.1")
                 if !cip
-                  appservice=dataparsed["CsHost"].split(".").first
+                  appservice = properties_hash["CsHost"].split(".").first
                   event.set("data.httplogs.appservice", appservice)
-                  JSON.parse(properties_hash).each { |key, value|
+                  properties_hash.each { |key, value|
                     event.set("data.httplogs.#{key}", value)
                   }
                 else
