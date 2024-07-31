@@ -99,7 +99,7 @@ data:
           user => "elastic"
           password => "Aloulou556"
           document_id => "%{[@metadata][_id]}"
-          index => "entraid-eiskyusers-logs-%{+YYYY.MM.dd}"
+          index => "entraid-riskyusers-logs-%{+YYYY.MM.dd}"
           ssl => true
           cacert => "/usr/share/logstash/certs/ca/ca.crt"
         }
