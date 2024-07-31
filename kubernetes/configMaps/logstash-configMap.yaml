@@ -25,23 +25,28 @@ data:
         ruby {
           code => '
             begin
+              # Directly access the properties hash if it's already a JSON object
               properties_hash = event.get("data")["properties"]
-              dataparsed=JSON.parse(properties_hash)
-              check=dataparsed["CsHost"].include?("scm")
-              if !check
-                cip=dataparsed["CIp"].include?("127.0.0.1")
-                if !cip
-                  puts "not a local client"
-                  appservice=dataparsed["CsHost"].split(".").first
-                  event.set("data.httplogs.appservice", appservice)
-                  JSON.parse(properties_hash).each { |key, value|
-                    event.set("data.httplogs.#{key}", value)
-                  }
+              
+              # Check if `properties_hash` is a Hash, which means it's already parsed
+              if properties_hash.is_a?(Hash)
+                check = properties_hash["CsHost"].include?("scm")
+                if !check
+                  cip = properties_hash["CIp"].include?("127.0.0.1")
+                  if !cip
+                    appservice = properties_hash["CsHost"].split(".").first
+                    event.set("data.httplogs.appservice", appservice)
+                    properties_hash.each { |key, value|
+                      event.set("data.httplogs.#{key}", value)
+                    }
+                  else
+                    event.cancel
+                  end
                 else
                   event.cancel
                 end
               else
-                event.cancel
+                raise "Expected properties_hash to be a Hash"
               end
             rescue => e
               puts "Ruby exception logs app service: #{e.message}"
@@ -128,7 +133,7 @@ data:
                         capacity_bytes=event.get("data")["total"]
                         capacity_Gib = capacity_bytes.to_f / (1024 ** 3)
                         storageaccount=event.get("data")["resourceId"].match(/STORAGEACCOUNTS\/([^\/]+)/)[1]
-                        event.set("data.storageaccount", storageaccounteee)
+                        event.set("data.storageaccount", storageaccount)
                         event.set("data.capacity", capacity_Gib)
                         if event.get("data")["metricName"]=="BlobCapacity"
                           event.set("data.capacityTarget", "blob")
