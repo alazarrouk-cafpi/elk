@@ -99,6 +99,18 @@ microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/filebeat
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/fleet-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/kibana-pvc.yaml
 microk8s kubectl apply -f elk-main/kubernetes/persistent-volumes-claims/logstash-pvc.yaml
+
+microk8s kubectl delete deployment elastic-setup
+microk8s kubectl delete deployment es01
+microk8s kubectl delete deployment logstash
+microk8s kubectl delete deployment kibana
+microk8s kubectl delete deployment logstash
+microk8s kubectl delete deployment fleet
+microk8s kubectl delete deployment filebeat-logs
+microk8s kubectl delete deployment filebeat-metrics
+microk8s kubectl delete deployment elastalert
+
+
 #setup deployments
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elk-setup-deployment.yaml
 microk8s kubectl apply -f elk-main/kubernetes/elk-deployments/elasticsearch-deployment.yaml
