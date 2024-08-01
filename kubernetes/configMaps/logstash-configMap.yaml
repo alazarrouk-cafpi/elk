@@ -25,24 +25,37 @@ data:
         ruby {
           code => '
             begin
-              properties_hash = event.get("[data][properties]")
-              
-              if properties_hash.is_a?(Hash) || properties_hash.is_a?(Array)
-                # Directly set the properties field without converting to string
-                event.set("[data][httplogs]", properties_hash)
-                
-                if !properties_hash["CsHost"].include?("scm") && !properties_hash["CIp"].include?("127.0.0.1")
-                  appservice = properties_hash["CsHost"].split(".").first
+              properties = event.get("[data][properties]")
+
+              if properties.is_a?(String)
+                # If properties is a string, attempt to parse it as JSON
+                begin
+                  properties = JSON.parse(properties)
+                rescue JSON::ParserError
+                  # If parsing fails, log an error and set properties to an empty hash
+                  puts "Failed to parse properties as JSON: #{properties}"
+                  properties = {}
+                end
+              end
+
+              if properties.is_a?(Hash)
+                # Ensure properties is a Hash, and then process it
+                if !properties["CsHost"].include?("scm") && !properties["CIp"].include?("127.0.0.1")
+                  appservice = properties["CsHost"].split(".").first
                   event.set("[data][httplogs][appservice]", appservice)
                   
-                  properties_hash.each { |key, value|
+                  properties.each { |key, value|
                     event.set("[data][httplogs][#{key}]", value)
                   }
                 else
                   event.cancel
                 end
+              else
+                # Log if properties is neither a Hash nor a String
+                puts "Unexpected format for properties: #{properties.class}"
               end
             rescue => e
+              # Log any Ruby exceptions
               puts "Ruby exception logs app service: #{e.message}"
             end
           '
