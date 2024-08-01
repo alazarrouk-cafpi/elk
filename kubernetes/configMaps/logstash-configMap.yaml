@@ -27,8 +27,10 @@ data:
             begin
               properties_hash = event.get("data")["properties"]
               if properties_hash.is_a?(Hash)
+                puts 'is json'
                 event.set("data.properties", properties_hash)
               else
+                puts 'is string'
                 properties_hash = JSON.parse(properties_hash)
                 event.set("data.properties", properties_hash)
               end
