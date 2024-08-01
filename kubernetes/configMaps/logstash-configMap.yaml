@@ -25,32 +25,37 @@ data:
         ruby {
           code => '
             begin
-            properties_hash = event.get("[data][properties]")
-            if properties_hash.is_a?(Hash) || properties_hash.is_a?(Array)
-              puts "json"
-              parse_to_string = properties_hash.to_json
-              event.set("[data][properties]", parse_to_string)
-            end
-            dataparsed = JSON.parse(properties_hash)
-            check = dataparsed["CsHost"].include?("scm")
-            if !check
-              cip = dataparsed["CIp"].include?("127.0.0.1")
-              if !cip
-                puts "not a local client"
+              # Get the properties field from the data
+              properties_hash = event.get("[data][properties]")
+              
+              # Ensure properties is a Hash or Array
+              if properties_hash.is_a?(Hash) || properties_hash.is_a?(Array)
+                # Convert properties to JSON string
+                parse_to_string = properties_hash.to_json
+                event.set("[data][properties]", parse_to_string)
+              end
+              
+              # Parse the JSON string back to a Hash
+              dataparsed = JSON.parse(event.get("[data][properties]"))
+              
+              # Check if CsHost contains "scm" and if CIp is "127.0.0.1"
+              if !dataparsed["CsHost"].include?("scm") && !dataparsed["CIp"].include?("127.0.0.1")
+                # Extract the app service from CsHost and set it in httplogs
                 appservice = dataparsed["CsHost"].split(".").first
                 event.set("[data][httplogs][appservice]", appservice)
+                
+                # Set other parsed values in the httplogs field
                 dataparsed.each { |key, value|
                   event.set("[data][httplogs][#{key}]", value)
                 }
               else
+                # Cancel the event if conditions are not met
                 event.cancel
               end
-            else
-              event.cancel
+            rescue => e
+              # Log any Ruby exceptions
+              puts "Ruby exception logs app service: #{e.message}"
             end
-          rescue => e
-            puts "Ruby exception logs app service: #{e.message}"
-          end
           '
         }
       }
