@@ -26,21 +26,20 @@ data:
           code => '
             begin
               properties_hash = event.get("data")["properties"]
-              if properties_hash.is_a?(Hash)
-                puts 'is json'
-                event.set("data.properties", properties_hash)
-              else
-                puts 'is string'
-                properties_hash = JSON.parse(properties_hash)
-                event.set("data.properties", properties_hash)
+              if properties_hash.is_a?(Hash) || properties_hash.is_a?(Array)
+                parse_to_string=JSON.generate(properties_hash)
+                event.set("data.properties",parse_to_string)
+                properties_hash=parse_to_string
               end
-              check = properties_hash["CsHost"].include?("scm")
+              dataparsed=JSON.parse(properties_hash)
+              check=dataparsed["CsHost"].include?("scm")
               if !check
-                cip = properties_hash["CIp"].include?("127.0.0.1")
+                cip=dataparsed["CIp"].include?("127.0.0.1")
                 if !cip
-                  appservice = properties_hash["CsHost"].split(".").first
+                  puts "not a local client"
+                  appservice=dataparsed["CsHost"].split(".").first
                   event.set("data.httplogs.appservice", appservice)
-                  properties_hash.each { |key, value|
+                  JSON.parse(properties_hash).each { |key, value|
                     event.set("data.httplogs.#{key}", value)
                   }
                 else
