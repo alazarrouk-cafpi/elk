@@ -27,9 +27,9 @@ data:
             begin
             properties_hash = event.get("[data][properties]")
             if properties_hash.is_a?(Hash) || properties_hash.is_a?(Array)
+              puts "json"
               parse_to_string = properties_hash.to_json
               event.set("[data][properties]", parse_to_string)
-              properties_hash = parse_to_string
             end
             dataparsed = JSON.parse(properties_hash)
             check = dataparsed["CsHost"].include?("scm")
