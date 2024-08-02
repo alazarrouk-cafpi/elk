@@ -27,7 +27,6 @@ data:
             begin
               properties = event.get("data")["properties"]
               properties_parsed = if properties.is_a?(String)
-                                    puts 'data properties is a string'
                                     JSON.parse(properties)
                                   else
                                     properties
