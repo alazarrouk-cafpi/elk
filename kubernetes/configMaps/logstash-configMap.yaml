@@ -26,15 +26,10 @@ data:
           code => '
             begin
               properties = event.get("data")["properties"]
-              properties_parsed = if properties.is_a?(String)
-                                    JSON.parse(properties)
-                                  else
-                                    properties
-                                  end
               if properties.is_a?(String) 
-                event.set("[data][properties]",properties_parsed)
+                event.cancel
               end 
-              dataparsed=properties_parsed
+              dataparsed=properties
               check=dataparsed["CsHost"].include?("scm")
               if !check 
                 cip=dataparsed["CIp"].include?("127.0.0.1")
