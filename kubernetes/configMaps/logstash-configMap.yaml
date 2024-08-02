@@ -25,17 +25,13 @@ data:
         ruby {
           code => '
             begin
-              properties = event.get("[data][properties]")
+               properties = event.get("data")["properties"]
 
               if properties.is_a?(String)
                 # If properties is a string, attempt to parse it as JSON
-                begin
-                  properties = JSON.parse(properties)
-                rescue JSON::ParserError
-                  # If parsing fails, log an error and set properties to an empty hash
-                  puts "Failed to parse properties as JSON: #{properties}"
-                  properties = {}
-                end
+                  properties_parsed = JSON.parse(properties)
+                  event.set("[data][properties]", properties_parsed)
+                  properties=properties_parsed
               end
 
               if properties.is_a?(Hash)
@@ -158,7 +154,6 @@ data:
                     elsif resource_type == "MICROSOFT.WEB"
                       appservice_plan=event.get("data")["resourceId"].match(/SERVERFARMS\/([^\/]+)/)[1]
                       metric=event.get("data")["metricName"]
-                      puts "metric name : #{metric}"
                       if metric!="CpuPercentage" && metric!="MemoryPercentage"
                         event.cancel
                       end
