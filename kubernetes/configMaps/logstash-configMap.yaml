@@ -27,6 +27,7 @@ data:
             begin
               properties = event.get("data")["properties"]
               if properties.is_a?(String) 
+                puts "a string"
                 event.cancel
               end 
               dataparsed=properties
