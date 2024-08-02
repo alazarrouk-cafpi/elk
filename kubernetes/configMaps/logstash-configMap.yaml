@@ -25,30 +25,32 @@ data:
         ruby {
           code => '
             begin
-               properties = event.get("data")["properties"]
-
-              if properties.is_a?(String)
-                # If properties is a string, attempt to parse it as JSON
-                  properties_parsed = JSON.parse(properties)
-                  event.set("[data][properties]", properties_parsed)
-                  properties=properties_parsed
-              end
-
-              if properties.is_a?(Hash)
-                # Ensure properties is a Hash, and then process it
-                if !properties["CsHost"].include?("scm") && !properties["CIp"].include?("127.0.0.1")
-                  appservice = properties["CsHost"].split(".").first
-                  event.set("[data][httplogs][appservice]", appservice)
-                  
-                  properties.each { |key, value|
-                    event.set("[data][httplogs][#{key}]", value)
+              properties = event.get("data")["properties"]
+              properties_parsed = if properties.is_a?(String)
+                                    puts 'data properties is a string'
+                                    JSON.parse(properties)
+                                  else
+                                    properties
+                                  end
+              if properties.is_a?(String) 
+                event.set("[data][properties]",properties_parsed)
+              end 
+              dataparsed=properties_parsed
+              check=dataparsed["CsHost"].include?("scm")
+              if !check 
+                cip=dataparsed["CIp"].include?("127.0.0.1")
+                if !cip 
+                  puts "not a local client"
+                  appservice=dataparsed["CsHost"].split(".").first
+                  event.set("data.httplogs.appservice", appservice)
+                  JSON.parse(properties_hash).each { |key, value|
+                    event.set("data.httplogs.#{key}", value)
                   }
                 else
                   event.cancel
                 end
               else
-                # Log if properties is neither a Hash nor a String
-                puts "Unexpected format for properties: #{properties.class}"
+                event.cancel
               end
             rescue => e
               # Log any Ruby exceptions
