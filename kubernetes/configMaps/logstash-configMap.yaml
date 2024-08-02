@@ -37,7 +37,7 @@ data:
                   puts "not a local client"
                   appservice=dataparsed["CsHost"].split(".").first
                   event.set("data.httplogs.appservice", appservice)
-                  JSON.parse(properties).each { |key, value|
+                  dataparsed.each { |key, value|
                     event.set("data.httplogs.#{key}", value)
                   }
                 else
