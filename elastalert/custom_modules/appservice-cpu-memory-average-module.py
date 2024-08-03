@@ -52,7 +52,7 @@ class AppserviceCpuMemoryAverageRule(RuleType):
                         "aggs": {
                             "average_cpu": {
                             "avg": {
-                                "field": "data.total"
+                                "field": "data.maximum"
                             }
                             }
                         }
@@ -66,7 +66,7 @@ class AppserviceCpuMemoryAverageRule(RuleType):
                         "aggs": {
                             "average_memory": {
                             "avg": {
-                                "field": "data.total"
+                                "field": "data.maximum"
                             }
                             }
                         }
