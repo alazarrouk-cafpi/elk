@@ -143,36 +143,34 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                 subscriptionId=bk['key']
             for bkus in bucket['username']['buckets']: 
                 username=bkus['key']
-            match={}
-            if not virtualMachineName.startswith('fleet-'): 
             # Example: Add a match if the count exceeds a certain threshold 
-                if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
+            if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
+                match = {
+                    "alert_type": 'cpu,memory',
+                    "virtualmachineName": virtualMachineName,
+                    "subscriptionId": subscriptionId,
+                    "average_cpu": averageCpu,
+                    "average_memory":averageMemory,
+                    "date" : current_time
+                }
+            else :
+                if averageCpu > cpu_threshold:
                     match = {
-                        "alert_type": 'cpu,memory',
+                        "alert_type": 'cpu',
                         "virtualmachineName": virtualMachineName,
                         "subscriptionId": subscriptionId,
                         "average_cpu": averageCpu,
-                        "average_memory":averageMemory,
                         "date" : current_time
                     }
-                else :
-                    if averageCpu > cpu_threshold:
-                        match = {
-                            "alert_type": 'cpu',
-                            "virtualmachineName": virtualMachineName,
-                            "subscriptionId": subscriptionId,
-                            "average_cpu": averageCpu,
-                            "date" : current_time
-                        }
-                    if averageMemory > memory_threshold:
-                        match = {
-                            "alert_type": 'memory',
-                            "virtualmachineName": virtualMachineName,
-                            "subscriptionId": subscriptionId,
-                            "average_memory": averageMemory,
-                            "date" : current_time
-                        }
-                self.send_http_post(match)
+                if averageMemory > memory_threshold:
+                    match = {
+                        "alert_type": 'memory',
+                        "virtualmachineName": virtualMachineName,
+                        "subscriptionId": subscriptionId,
+                        "average_memory": averageMemory,
+                        "date" : current_time
+                    }
+            self.send_http_post(match)
 
     def send_http_post(self, match):
         # Instantiate HTTPPost2Alerter and send alert
