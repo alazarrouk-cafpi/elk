@@ -62,12 +62,6 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                                 "field": "cloud.account.id",
                                 "size": 1
                             }
-                        },
-                        "username": {
-                            "terms": {
-                                "field": "agent.name",
-                                "size": 1
-                            }
                         }
                     }
                 }
@@ -109,12 +103,6 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                                 "field": "cloud.account.id",
                                 "size": 1
                             }
-                        },
-                        "username": {
-                            "terms": {
-                                "field": "agent.name",
-                                "size": 1
-                            }
                         }
                     }
                 }
@@ -124,13 +112,12 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
         # Execute the query
         result_cpu = es.search(index=".ds-metrics-system.cpu-default-*", body=es_query_cpu)
         result_memory= es.search(index=".ds-metrics-system.memory-default-*", body=es_query_memory)
-        cpu_threshold=8 
+        cpu_threshold=6
         memory_threshold=60
         print(result_cpu)
         # Process the results
         for bucket in result_cpu['aggregations']['virtualmachines']['buckets']:
             subscriptionId=''
-            username=''
             virtualMachineName = bucket['key']
             averageCpu = round((bucket['cpu_avg']['average_cpu']['value'])*100, 2)
             averageMemory = 0
@@ -141,8 +128,6 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
             
             for bk in bucket['subscription_id']['buckets']: 
                 subscriptionId=bk['key']
-            for bkus in bucket['username']['buckets']: 
-                username=bkus['key']
             # Example: Add a match if the count exceeds a certain threshold 
             if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
                 match = {
