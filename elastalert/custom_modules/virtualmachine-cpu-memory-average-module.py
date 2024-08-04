@@ -99,7 +99,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                         "aggs": {
                             "average_memory": {
                             "avg": {
-                                "field": "system.memory.used.pct"
+                                "field": "system.memory.actual.used.pct"
                             }
                             }
                         }
