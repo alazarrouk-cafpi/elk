@@ -144,7 +144,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
             for bkus in bucket['username']['buckets']: 
                 username=bkus['key']
             match={}
-            if not username.startswith('fleet-'): 
+            if not virtualMachineName.startswith('fleet-'): 
             # Example: Add a match if the count exceeds a certain threshold 
                 if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
                     match = {
