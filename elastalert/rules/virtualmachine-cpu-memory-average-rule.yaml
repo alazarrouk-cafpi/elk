@@ -1,6 +1,6 @@
 name: "Average Cpu and Memory utilization Rule Virtual machine"
 type: "custom_modules.virtualmachine-cpu-memory-average-module.VirtualmachineCpuMemoryAverageRule"
-index: ".ds-metrics-system.cpu-default-*"
+index: ".ds-metrics-*"
 http_post2_url: "https://af-nodejs.azurewebsites.net/api/virtualmachine-api?path=/create/alert"
 http_post2_timeout: 60
 http_post2_payload:
