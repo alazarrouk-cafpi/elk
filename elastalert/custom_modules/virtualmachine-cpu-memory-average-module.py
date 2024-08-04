@@ -65,7 +65,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                         },
                         "username": {
                             "terms": {
-                                "field": "user.name",
+                                "field": "agent.name",
                                 "size": 1
                             }
                         }
@@ -112,7 +112,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                         },
                         "username": {
                             "terms": {
-                                "field": "user.name",
+                                "field": "agent.name",
                                 "size": 1
                             }
                         }
@@ -143,7 +143,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                 subscriptionId=bk['key']
             for bkus in bucket['username']['buckets']: 
                 username=bkus['key']
-            if username != 'root': 
+            if not username.startswith('fleet-'): 
             # Example: Add a match if the count exceeds a certain threshold 
                 if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
                     match = {
