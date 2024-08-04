@@ -143,6 +143,7 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                 subscriptionId=bk['key']
             for bkus in bucket['username']['buckets']: 
                 username=bkus['key']
+            match={}
             if not username.startswith('fleet-'): 
             # Example: Add a match if the count exceeds a certain threshold 
                 if averageCpu > cpu_threshold and averageMemory > memory_threshold: 
@@ -171,10 +172,6 @@ class VirtualmachineCpuMemoryAverageRule(RuleType):
                             "average_memory": averageMemory,
                             "date" : current_time
                         }
-
-                    
-                    # Send email alert for the match
-                    # self.email_alerter.alert([match])
                 self.send_http_post(match)
 
     def send_http_post(self, match):
