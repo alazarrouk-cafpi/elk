@@ -15,7 +15,7 @@ steps:
 
       # Define the script to run on VM
       SCRIPT='#!/bin/bash
-      sudo bash /home/admala/re-install.sh
+      sudo bash /home/admala/update-elk.sh
       exit 0'
 
       # Print the script for debugging
